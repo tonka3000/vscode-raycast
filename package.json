@@ -17,6 +17,8 @@
     "onCommand:raycast.lintfix",
     "onCommand:raycast.build",
     "onCommand:raycast.migration",
+    "onCommand:raycast.opendocs",
+    "onCommand:raycast.searchdocs",
     "workspaceContains:package.json"
   ],
   "main": "./dist/extension.js",
@@ -45,6 +47,16 @@
       {
         "command": "raycast.migration",
         "title": "Run Migration",
+        "category": "Raycast"
+      },
+      {
+        "command": "raycast.opendocs",
+        "title": "Open Documentation",
+        "category": "Raycast"
+      },
+      {
+        "command": "raycast.searchdocs",
+        "title": "Search Documentation",
         "category": "Raycast"
       }
     ],

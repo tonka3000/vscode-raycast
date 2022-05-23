@@ -8,11 +8,13 @@ This is a [Raycast](https://raycast.com) extension for VSCode. This should help 
 
 ## Features
 
-- [x] Run lint process via command
-- [x] Run fix-lint process via command
-- [x] Run build process via command
-- [x] Run develop mode via command
-- [x] Run migration via command
+- [x] Run lint process
+- [x] Run fix-lint process
+- [x] Run build process
+- [x] Run develop mode
+- [x] Run migration
+- [x] Open [Documentation](https://developers.raycast.com)
+- [x] Search in [Documentation](https://developers.raycast.com)
 
 ## Requirements
 

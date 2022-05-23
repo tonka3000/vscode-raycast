@@ -25,6 +25,7 @@ jobs:
           node --version
           npm ci
           npm run prettier
+          npm run lint
           npm run package-publish
         env:
           CI: true
