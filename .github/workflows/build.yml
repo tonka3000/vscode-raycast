@@ -1,0 +1,35 @@
+name: Build Extension
+
+on:
+  push:
+    branches:
+      - "*"
+      - "!main"
+  pull_request:
+    branches:
+      - "*"
+      - "!main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+      - name: npm install, build, and test
+        run: |
+          node --version
+          npm ci
+          npm run prettier
+          npm run package-publish
+        env:
+          CI: true
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: raycast.vsix
+          path: "*.vsix"
