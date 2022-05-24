@@ -6,6 +6,8 @@ import { lintFixCmd } from "./commands/lintfix";
 import { runMigrationCmd } from "./commands/migration";
 import { ExtensionManager } from "./manager";
 import { searchDocsCmd } from "./commands/searchdocs";
+import { addCommandCmd } from "./commands/addCommand";
+import { addPreferenceCmd } from "./commands/addPreference";
 
 export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("lint", async () => lintCmd(manager));
@@ -15,4 +17,6 @@ export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("migration", async () => runMigrationCmd(manager));
   manager.registerCommand("opendocs", async () => openDocsCmd(manager));
   manager.registerCommand("searchdocs", async () => searchDocsCmd(manager));
+  manager.registerCommand("addcommand", async () => addCommandCmd(manager));
+  manager.registerCommand("addpreference", async () => addPreferenceCmd(manager));
 }

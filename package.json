@@ -2,7 +2,7 @@
   "name": "raycast",
   "displayName": "Raycast",
   "description": "",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "engines": {
     "vscode": "^1.67.0"
   },
@@ -19,6 +19,7 @@
     "onCommand:raycast.migration",
     "onCommand:raycast.opendocs",
     "onCommand:raycast.searchdocs",
+    "onCommand:raycast.addcommand",
     "workspaceContains:package.json"
   ],
   "main": "./dist/extension.js",
@@ -57,6 +58,16 @@
       {
         "command": "raycast.searchdocs",
         "title": "Search Documentation",
+        "category": "Raycast"
+      },
+      {
+        "command": "raycast.addcommand",
+        "title": "Add Command",
+        "category": "Raycast"
+      },
+      {
+        "command": "raycast.addpreference",
+        "title": "Add Preference",
         "category": "Raycast"
       }
     ],
@@ -97,20 +108,21 @@
     "publish": "npx vsce publish"
   },
   "devDependencies": {
-    "@types/vscode": "^1.67.0",
+    "@types/edit-json-file": "^1.7.0",
     "@types/glob": "^7.2.0",
     "@types/mocha": "^9.1.1",
     "@types/node": "14.x",
+    "@types/vscode": "^1.67.0",
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.21.0",
+    "@vscode/test-electron": "^2.1.3",
     "eslint": "^8.14.0",
     "glob": "^8.0.1",
     "mocha": "^9.2.2",
-    "typescript": "^4.6.4",
     "ts-loader": "^9.2.8",
+    "typescript": "^4.6.4",
     "webpack": "^5.70.0",
-    "webpack-cli": "^4.9.2",
-    "@vscode/test-electron": "^2.1.3"
+    "webpack-cli": "^4.9.2"
   },
   "icon": "raycast.png",
   "homepage": "https://github.com/tonka3000/vscode-raycast",
@@ -121,5 +133,8 @@
   "bugs": {
     "url": "https://github.com/tonka3000/vscode-raycast/issues",
     "email": "tonka3100@gmail.com"
+  },
+  "dependencies": {
+    "edit-json-file": "^1.7.0"
   }
 }

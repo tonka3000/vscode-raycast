@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { Logger, LogLevel } from "./logging";
+import { getErrorMessage } from "./utils";
 
 export class ExtensionManager implements vscode.Disposable {
   private _context: vscode.ExtensionContext;
@@ -27,7 +28,14 @@ export class ExtensionManager implements vscode.Disposable {
   }
 
   public registerCommand(command: string, callback: (...args: any[]) => any, thisArg?: any): vscode.Disposable {
-    const disp = vscode.commands.registerCommand(`raycast.${command}`, callback, thisArg);
+    const safeCallback = async (args: any[], thisArg?: any): Promise<any> => {
+      try {
+        return await callback(args, thisArg);
+      } catch (error) {
+        vscode.window.showErrorMessage(getErrorMessage(error));
+      }
+    };
+    const disp = vscode.commands.registerCommand(`raycast.${command}`, safeCallback, thisArg);
     this._context.subscriptions.push(disp);
     return disp;
   }
@@ -93,6 +101,15 @@ export class ExtensionManager implements vscode.Disposable {
     term.sendText("clear");
     term.show();
     term.sendText(`npx exec ${cmd.join(" ")}`);
+  }
+
+  public getActiveWorkspace(): vscode.WorkspaceFolder | undefined {
+    const wsf = vscode.workspace.workspaceFolders;
+    if (wsf && wsf.length > 0) {
+      const ws = wsf[0];
+      return ws;
+    }
+    return undefined;
   }
 
   public dispose() {}

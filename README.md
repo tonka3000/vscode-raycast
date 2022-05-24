@@ -13,6 +13,8 @@ This is a [Raycast](https://raycast.com) extension for VSCode. This should help 
 - [x] Run build process
 - [x] Run develop mode
 - [x] Run migration
+- [x] Add preference (`default` and `data` are not support for now)
+- [x] Add command
 - [x] Open [Documentation](https://developers.raycast.com)
 - [x] Search in [Documentation](https://developers.raycast.com)
 
