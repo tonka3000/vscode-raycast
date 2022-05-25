@@ -8,6 +8,7 @@ import { ExtensionManager } from "./manager";
 import { searchDocsCmd } from "./commands/searchdocs";
 import { addCommandCmd } from "./commands/addCommand";
 import { addPreferenceCmd } from "./commands/addPreference";
+import { insertImageAssetCmd } from "./commands/insertimageasset";
 
 export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("lint", async () => lintCmd(manager));
@@ -19,4 +20,5 @@ export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("searchdocs", async () => searchDocsCmd(manager));
   manager.registerCommand("addcommand", async () => addCommandCmd(manager));
   manager.registerCommand("addpreference", async () => addPreferenceCmd(manager));
+  manager.registerCommand("insertimageasset", async () => insertImageAssetCmd(manager));
 }

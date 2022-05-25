@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.3
+
+- Add `Insert Image Asset`
+
 ## 0.2
 
 - Add command to add a Raycast Preference
