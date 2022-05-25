@@ -20,6 +20,7 @@
     "onCommand:raycast.opendocs",
     "onCommand:raycast.searchdocs",
     "onCommand:raycast.addcommand",
+    "onCommand:raycast.insertimageasset",
     "workspaceContains:package.json"
   ],
   "main": "./dist/extension.js",
@@ -68,6 +69,11 @@
       {
         "command": "raycast.addpreference",
         "title": "Add Preference",
+        "category": "Raycast"
+      },
+      {
+        "command": "raycast.insertimageasset",
+        "title": "Insert Image Asset",
         "category": "Raycast"
       }
     ],

@@ -1,4 +1,6 @@
+import path = require("path");
 import * as vscode from "vscode";
+import { getImageAssetsFromFolder } from "./assets";
 import { Logger, LogLevel } from "./logging";
 import { getErrorMessage } from "./utils";
 
@@ -110,6 +112,15 @@ export class ExtensionManager implements vscode.Disposable {
       return ws;
     }
     return undefined;
+  }
+
+  public async getImageAssets(): Promise<string[]> {
+    const ws = this.getActiveWorkspace();
+    if (!ws) {
+      return [];
+    }
+    const assetsFolder = path.join(ws.uri.fsPath, "assets");
+    return await getImageAssetsFromFolder(assetsFolder);
   }
 
   public dispose() {}
