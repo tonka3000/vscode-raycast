@@ -6,6 +6,8 @@ let _EXT_MANAGER: ExtensionManager | null = null;
 
 export function activate(context: vscode.ExtensionContext) {
   _EXT_MANAGER = new ExtensionManager(context);
+  _EXT_MANAGER.updateState();
+  _EXT_MANAGER.updateContext();
   registerAllCommands(_EXT_MANAGER);
 }
 

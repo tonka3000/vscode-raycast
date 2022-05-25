@@ -1,3 +1,6 @@
+import { fileExists } from "./utils";
+import * as fs from "fs";
+
 export enum PreferenceType {
   textfield = "textfield",
   password = "password",
@@ -38,4 +41,17 @@ export interface Manifest {
   description?: string;
   commands?: Command[];
   preferences?: Preference[];
+  dependencies?: Record<string, string>;
+}
+
+export async function readManifestFile(filename: string | undefined): Promise<Manifest | undefined> {
+  if (filename === undefined) {
+    return undefined;
+  }
+  if (await fileExists(filename)) {
+    const bytes = await fs.promises.readFile(filename);
+    const manifest = JSON.parse(bytes.toString()) as Manifest;
+    return manifest;
+  }
+  return undefined;
 }

@@ -80,8 +80,36 @@
     "menus": {
       "commandPalette": [
         {
+          "command": "raycast.build",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.rundev",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.lint",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.lintfix",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.migration",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.addcommand",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.addpreference",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
           "command": "raycast.insertimageasset",
-          "when": "resourceExtname && !editorReadonly"
+          "when": "resourceExtname && !editorReadonly && raycast.workspaceEnabled"
         }
       ]
     },
