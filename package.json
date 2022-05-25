@@ -77,6 +77,14 @@
         "category": "Raycast"
       }
     ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "raycast.insertimageasset",
+          "when": "resourceExtname && !editorReadonly"
+        }
+      ]
+    },
     "configuration": [
       {
         "title": "Raycast",
