@@ -9,7 +9,16 @@ export async function insertImageAssetCmd(manager: ExtensionManager) {
       placeHolder: "Choose Image Asset",
     });
     if (filename !== undefined && filename.length > 0) {
-      editor.edit((builder) => builder.replace(editor.selection, filename));
+      editor
+        .edit((builder) => {
+          builder.replace(editor.selection, filename);
+        })
+        .then((success) => {
+          if (success) {
+            const pos = editor.selection.end;
+            editor.selection = new vscode.Selection(pos, pos);
+          }
+        });
     }
   }
 }
