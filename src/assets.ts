@@ -9,6 +9,8 @@ export async function getAssetsFromFolder(folder: string): Promise<string[]> {
 }
 
 export async function getImageAssetsFromFolder(folder: string): Promise<string[]> {
-  const files = (await getAssetsFromFolder(folder)).filter((f) => f.endsWith(".png"));
+  const files = (await getAssetsFromFolder(folder)).filter(
+    (f) => f.endsWith(".png") || f.endsWith("*.jpg") || f.endsWith(".gif")
+  );
   return files;
 }
