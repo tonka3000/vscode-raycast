@@ -6,6 +6,7 @@ import * as fs from "fs";
 import { Command, Manifest } from "../manifest";
 import editJsonFile = require("edit-json-file");
 import { showCustomQuickPick } from "../picker";
+import { getAssetsFromFolder } from "../assets";
 
 async function askName(cmd: Command, existingCmds: string[]): Promise<string | undefined> {
   const result = await vscode.window.showInputBox({
@@ -93,14 +94,6 @@ async function askMode(cmd: Command): Promise<string | undefined> {
   } else {
     return undefined;
   }
-}
-
-async function getAssetsFromFolder(folder: string): Promise<string[]> {
-  try {
-    const files = await fs.promises.readdir(folder);
-    return files;
-  } catch (error) {}
-  return [];
 }
 
 async function askIcon(cmd: Command, rootFolder: string): Promise<string | undefined> {

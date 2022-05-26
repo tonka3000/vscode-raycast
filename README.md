@@ -15,6 +15,11 @@ This is a [Raycast](https://raycast.com) extension for VSCode. This should help 
 - [x] Run migration
 - [x] Add preference (`default` and `data` are not support for now)
 - [x] Add command
+- [x] Image Asset filename via dropdown into active text editor
+- [x] Image Asset autocompletion for
+  - icons in `.tsx` files (`source:` and `icon=` are supported)
+  - icons in `package.json` (`"icon":` is supported)
+- [x] Builtin code snippet - just type raycast in a `.tsx` file
 - [x] Open [Documentation](https://developers.raycast.com)
 - [x] Search in [Documentation](https://developers.raycast.com)
 
