@@ -4,6 +4,8 @@
 
 - Add `Insert Image Asset`
 - Add Code snippets prefix with `raycast`
+- Add Image Asset autocompletion for extension icons in `.tsx` files (`source:` and `icon=` are supported)
+- Add Image Asset autocompletion for extension icons in `package.json` (`"icon":` is supported)
 
 ## 0.2
 
