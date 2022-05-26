@@ -16,6 +16,7 @@ This is a [Raycast](https://raycast.com) extension for VSCode. This should help 
 - [x] Add preference (`default` and `data` are not support for now)
 - [x] Add command
 - [x] Add Image Asset filename via dropdown into active text editor
+- [x] Builtin code snippet - just type raycast in a `.tsx` file
 - [x] Open [Documentation](https://developers.raycast.com)
 - [x] Search in [Documentation](https://developers.raycast.com)
 

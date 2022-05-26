@@ -132,6 +132,12 @@
           }
         }
       }
+    ],
+    "snippets": [
+      {
+        "language": "typescriptreact",
+        "path": "./snippets/components.code-snippets"
+      }
     ]
   },
   "scripts": {
