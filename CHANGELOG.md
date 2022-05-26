@@ -3,6 +3,7 @@
 ## 0.3
 
 - Add `Insert Image Asset`
+- Add Code snippets prefix with `raycast`
 
 ## 0.2
 
