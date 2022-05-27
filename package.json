@@ -21,6 +21,9 @@
     "onCommand:raycast.searchdocs",
     "onCommand:raycast.addcommand",
     "onCommand:raycast.insertimageasset",
+    "onCommand:raycast.login",
+    "onCommand:raycast.publish",
+    "onCommand:raycast.attachdebugger",
     "workspaceContains:package.json"
   ],
   "main": "./dist/extension.js",
@@ -85,6 +88,11 @@
         "command": "raycast.publish",
         "title": "Publish",
         "category": "Raycast"
+      },
+      {
+        "command": "raycast.attachdebugger",
+        "title": "Attach Debugger",
+        "category": "Raycast"
       }
     ],
     "menus": {
@@ -127,6 +135,10 @@
         },
         {
           "command": "raycast.publish",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.attachdebugger",
           "when": "raycast.workspaceEnabled"
         }
       ]

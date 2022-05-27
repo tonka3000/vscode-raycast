@@ -4,6 +4,7 @@
 
 - Add `Login` command
 - Add `Publish` command
+- Add `Attach Debugger` command
 
 ## 0.3
 

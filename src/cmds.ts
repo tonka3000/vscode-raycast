@@ -11,6 +11,7 @@ import { addPreferenceCmd } from "./commands/addPreference";
 import { insertImageAssetCmd } from "./commands/insertimageasset";
 import { loginCmd } from "./commands/login";
 import { publicCmd } from "./commands/publish";
+import { attachDebuggerCmd } from "./commands/attachdebugger";
 
 export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("lint", async () => lintCmd(manager));
@@ -25,4 +26,5 @@ export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("insertimageasset", async () => insertImageAssetCmd(manager));
   manager.registerCommand("login", async () => loginCmd(manager));
   manager.registerCommand("publish", async () => publicCmd(manager));
+  manager.registerCommand("attachdebugger", async () => attachDebuggerCmd(manager));
 }
