@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.4
+
+- Add `Login` command
+- Add `Publish` command
+
 ## 0.3
 
 - Add `Insert Image Asset`

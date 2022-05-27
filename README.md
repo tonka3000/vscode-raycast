@@ -13,6 +13,8 @@ This is a [Raycast](https://raycast.com) extension for VSCode. This should help 
 - [x] Run build process
 - [x] Run develop mode
 - [x] Run migration
+- [x] Login
+- [x] Publish extensions
 - [x] Add preference (`default` and `data` are not support for now)
 - [x] Add command
 - [x] Image Asset filename via dropdown into active text editor
