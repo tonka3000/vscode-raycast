@@ -13,6 +13,14 @@ This is a [Raycast](https://raycast.com) extension for VSCode. This should help 
 - [x] Run build process
 - [x] Run develop mode
 - [x] Run migration
+- [x] Login
+- [x] Publish extensions
+- [x] `Attach Debugger` command
+
+  Attach a nodejs debugger to the running Raycast node process.
+
+  ⚠️ Make sure that Raycast is running and you have started a non native extension at least once, otherwise the node process does not run ⚠️
+
 - [x] Add preference (`default` and `data` are not support for now)
 - [x] Add command
 - [x] Image Asset filename via dropdown into active text editor

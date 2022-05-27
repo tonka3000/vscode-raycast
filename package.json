@@ -2,7 +2,7 @@
   "name": "raycast",
   "displayName": "Raycast",
   "description": "",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "engines": {
     "vscode": "^1.67.0"
   },
@@ -21,6 +21,9 @@
     "onCommand:raycast.searchdocs",
     "onCommand:raycast.addcommand",
     "onCommand:raycast.insertimageasset",
+    "onCommand:raycast.login",
+    "onCommand:raycast.publish",
+    "onCommand:raycast.attachdebugger",
     "workspaceContains:package.json"
   ],
   "main": "./dist/extension.js",
@@ -75,6 +78,21 @@
         "command": "raycast.insertimageasset",
         "title": "Insert Image Asset",
         "category": "Raycast"
+      },
+      {
+        "command": "raycast.login",
+        "title": "Login",
+        "category": "Raycast"
+      },
+      {
+        "command": "raycast.publish",
+        "title": "Publish",
+        "category": "Raycast"
+      },
+      {
+        "command": "raycast.attachdebugger",
+        "title": "Attach Debugger",
+        "category": "Raycast"
       }
     ],
     "menus": {
@@ -110,6 +128,18 @@
         {
           "command": "raycast.insertimageasset",
           "when": "resourceExtname && !editorReadonly && raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.login",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.publish",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.attachdebugger",
+          "when": "raycast.workspaceEnabled"
         }
       ]
     },
