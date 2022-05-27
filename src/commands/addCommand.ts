@@ -160,7 +160,7 @@ export async function addCommandCmd(manager: ExtensionManager) {
           fs.promises.writeFile(tsxFilename, lines.join("\n"));
         }
 
-        vscode.window.showInformationMessage(commandID);
+        vscode.window.showInformationMessage(`Adding command '${commandID}' successful`);
       }
     } else {
       throw Error("Workspace does not contain a package.json file");
