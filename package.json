@@ -7,7 +7,6 @@
     "vscode": "^1.67.0"
   },
   "publisher": "tonka3000",
-  "preview": true,
   "license": "MIT",
   "categories": [
     "Other"
