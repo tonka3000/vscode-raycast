@@ -2,12 +2,11 @@
   "name": "raycast",
   "displayName": "Raycast",
   "description": "",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "engines": {
     "vscode": "^1.67.0"
   },
   "publisher": "tonka3000",
-  "preview": true,
   "license": "MIT",
   "categories": [
     "Other"
