@@ -8,28 +8,28 @@ This is a [Raycast](https://raycast.com) extension for VSCode. This should help 
 
 ## Features
 
-- [x] Run lint process
-- [x] Run fix-lint process
-- [x] Run build process
-- [x] Run develop mode
-- [x] Run migration
-- [x] Login
-- [x] Publish extensions
-- [x] `Attach Debugger` command
+- ✅ Run lint process
+- ✅ Run fix-lint process
+- ✅ Run build process
+- ✅ Run develop mode
+- ✅ Run migration
+- ✅ Login
+- ✅ Publish extensions
+- ✅ `Attach Debugger` command
 
   Attach a nodejs debugger to the running Raycast node process.
 
   ⚠️ Make sure that Raycast is running and you have started a non native extension at least once, otherwise the node process does not run ⚠️
 
-- [x] Add preference (`default` and `data` are not support for now)
-- [x] Add command
-- [x] Image Asset filename via dropdown into active text editor
-- [x] Image Asset autocompletion for
+- ✅ Add preference (`default` and `data` are not support for now)
+- ✅ Add command
+- ✅ Image Asset filename via dropdown into active text editor
+- ✅ Image Asset autocompletion for
   - icons in `.tsx` files (`source:` and `icon=` are supported)
   - icons in `package.json` (`"icon":` is supported)
-- [x] Builtin code snippet - just type raycast in a `.tsx` file
-- [x] Open [Documentation](https://developers.raycast.com)
-- [x] Search in [Documentation](https://developers.raycast.com)
+- ✅ Builtin code snippet - just type raycast in a `.tsx` file
+- ✅ Open [Documentation](https://developers.raycast.com)
+- ✅ Search in [Documentation](https://developers.raycast.com)
 
 ## Requirements
 
