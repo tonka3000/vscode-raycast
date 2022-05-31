@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.4.1
+
+- Stop running debugger instead of throw an error to avoid blocking when VSCode does not cleanup crashed debugger instances
+
 ## 0.4
 
 - Add `Login` command

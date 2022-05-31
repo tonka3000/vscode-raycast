@@ -36,8 +36,20 @@ export async function attachDebuggerCmd(manager: ExtensionManager) {
     throw Error("No Active Workspace");
   }
   const name = "Attach Running Raycast Process";
-  if (vscode.debug.activeDebugSession?.workspaceFolder === ws) {
-    throw Error("Debugger already attached");
+  const ads = vscode.debug.activeDebugSession;
+  if (ads) {
+    if (
+      ads.workspaceFolder === ws &&
+      ads.name.includes(name) &&
+      ads.type.includes("node") &&
+      ads.configuration.request === "attach"
+    ) {
+      try {
+        await vscode.debug.stopDebugging(ads);
+      } catch (error) {
+        // ignore error if we can not stop it. VSCode can handle multiple debuggers at once
+      }
+    }
   }
   vscode.debug.startDebugging(ws, {
     name: name,
