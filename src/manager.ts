@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import { getImageAssetsFromFolder } from "./assets";
 import { Logger, LogLevel } from "./logging";
 import { readManifestFile } from "./manifest";
+import { RaycastTreeDataProvider } from "./tree";
 import { getErrorMessage } from "./utils";
 
 export class ExtensionManager implements vscode.Disposable {
@@ -10,6 +11,7 @@ export class ExtensionManager implements vscode.Disposable {
   private _channel: vscode.OutputChannel;
   public logger: Logger = new Logger();
   private _isRaycastEnabled = false;
+  public treedataprovider: RaycastTreeDataProvider | undefined;
 
   constructor(public readonly extensionContext: vscode.ExtensionContext) {
     this._context = extensionContext;
@@ -89,6 +91,19 @@ export class ExtensionManager implements vscode.Disposable {
     this._isRaycastEnabled = isRaycastEnabled;
     this.logger.debug(`${pkgjsonFilename} raycast enabled: ${isRaycastEnabled}`);
     await this.setContext("raycast.workspaceEnabled", isRaycastEnabled);
+    this.registerTree();
+    if (this.treedataprovider) {
+      this.treedataprovider.refresh();
+    }
+  }
+
+  private registerTree() {
+    const ws = this.getActiveWorkspace();
+    if (ws && this.isRaycastEnabled && !this.treedataprovider) {
+      this.treedataprovider = new RaycastTreeDataProvider(this);
+      const dis = vscode.window.registerTreeDataProvider("raycast", this.treedataprovider);
+      this._context.subscriptions.push(dis);
+    }
   }
 
   private async setContext(key: string, value: any): Promise<void> {
@@ -99,10 +114,10 @@ export class ExtensionManager implements vscode.Disposable {
     } catch (error) {}
   }
 
-  public registerCommand(command: string, callback: (...args: any[]) => any, thisArg?: any): vscode.Disposable {
-    const safeCallback = async (args: any[], thisArg?: any): Promise<any> => {
+  public registerCommand(command: string, callback: (args: any[]) => any, thisArg?: any): vscode.Disposable {
+    const safeCallback = async (args: any[]): Promise<any> => {
       try {
-        return await callback(args, thisArg);
+        return await callback(args);
       } catch (error) {
         vscode.window.showErrorMessage(getErrorMessage(error));
       }
@@ -271,6 +286,10 @@ export class ExtensionManager implements vscode.Disposable {
       '"'
     );
     this._context.subscriptions.push(tsImageAssetCompletionProvider, jsonImageAssetCompletionProvider);
+  }
+
+  public async setLoaded() {
+    await this.setContext("raycast.extensionLoaded", true);
   }
 
   public dispose() {}

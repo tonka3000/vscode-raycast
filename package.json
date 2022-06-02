@@ -2,7 +2,7 @@
   "name": "raycast",
   "displayName": "Raycast",
   "description": "",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "engines": {
     "vscode": "^1.67.0"
   },
@@ -23,6 +23,10 @@
     "onCommand:raycast.login",
     "onCommand:raycast.publish",
     "onCommand:raycast.attachdebugger",
+    "onCommand:raycast.refreshtree",
+    "onCommand:raycast.goto.preference",
+    "onCommand:raycast.goto.command",
+    "onView:raycast",
     "workspaceContains:package.json"
   ],
   "main": "./dist/extension.js",
@@ -66,12 +70,14 @@
       {
         "command": "raycast.addcommand",
         "title": "Add Command",
-        "category": "Raycast"
+        "category": "Raycast",
+        "icon": "$(add)"
       },
       {
         "command": "raycast.addpreference",
         "title": "Add Preference",
-        "category": "Raycast"
+        "category": "Raycast",
+        "icon": "$(add)"
       },
       {
         "command": "raycast.insertimageasset",
@@ -92,6 +98,24 @@
         "command": "raycast.attachdebugger",
         "title": "Attach Debugger",
         "category": "Raycast"
+      },
+      {
+        "command": "raycast.refreshtree",
+        "title": "Refresh Tree",
+        "category": "Raycast",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "raycast.goto.preference",
+        "title": "Go to Preference Manifest Location",
+        "category": "Raycast",
+        "icon": "$(code)"
+      },
+      {
+        "command": "raycast.goto.command",
+        "title": "Go to Command Manifest Location",
+        "category": "Raycast",
+        "icon": "$(code)"
       }
     ],
     "menus": {
@@ -139,9 +163,68 @@
         {
           "command": "raycast.attachdebugger",
           "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.goto.command",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.goto.preference",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.refreshtree",
+          "when": "false"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "raycast.refreshtree",
+          "when": "view == raycast",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "raycast.addcommand",
+          "when": "view == raycast && viewItem == commands",
+          "group": "inline"
+        },
+        {
+          "command": "raycast.addpreference",
+          "when": "view == raycast && viewItem == preferences",
+          "group": "inline"
+        },
+        {
+          "command": "raycast.goto.preference",
+          "when": "view == raycast && viewItem == preference",
+          "group": "inline"
+        },
+        {
+          "command": "raycast.goto.command",
+          "when": "view == raycast && viewItem == command",
+          "group": "inline"
         }
       ]
     },
+    "views": {
+      "explorer": [
+        {
+          "id": "raycast",
+          "name": "Raycast",
+          "when": "raycast.workspaceEnabled",
+          "icon": "resources/raycast.svg",
+          "contextualTitle": "Raycast"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "raycast",
+        "contents": "No Raycast enabled project. Checkout the [Getting Started](https://developers.raycast.com/basics/getting-started) to get started.",
+        "when": "!raycast.workspaceEnabled && raycast.extensionLoaded"
+      }
+    ],
     "configuration": [
       {
         "title": "Raycast",
@@ -187,6 +270,7 @@
   "devDependencies": {
     "@types/edit-json-file": "^1.7.0",
     "@types/glob": "^7.2.0",
+    "@types/json-to-ast": "^2.1.2",
     "@types/mocha": "^9.1.1",
     "@types/node": "14.x",
     "@types/vscode": "^1.67.0",
@@ -212,6 +296,7 @@
     "email": "tonka3100@gmail.com"
   },
   "dependencies": {
-    "edit-json-file": "^1.7.0"
+    "edit-json-file": "^1.7.0",
+    "json-to-ast": "^2.1.0"
   }
 }
