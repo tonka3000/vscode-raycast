@@ -12,6 +12,9 @@ import { insertImageAssetCmd } from "./commands/insertimageasset";
 import { loginCmd } from "./commands/login";
 import { publicCmd } from "./commands/publish";
 import { attachDebuggerCmd } from "./commands/attachdebugger";
+import { refreshTreeCmd } from "./commands/refreshtree";
+import { gotoPreferenceManifestLocationCmd } from "./commands/gotopreflocation";
+import { gotoCommandManifestLocationCmd } from "./commands/gotocmdlocation";
 
 export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("lint", async () => lintCmd(manager));
@@ -27,4 +30,9 @@ export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("login", async () => loginCmd(manager));
   manager.registerCommand("publish", async () => publicCmd(manager));
   manager.registerCommand("attachdebugger", async () => attachDebuggerCmd(manager));
+  manager.registerCommand("refreshtree", async () => refreshTreeCmd(manager));
+  manager.registerCommand("goto.preference", async (...args: any[]) =>
+    gotoPreferenceManifestLocationCmd(manager, args)
+  );
+  manager.registerCommand("goto.command", async (...args: any[]) => gotoCommandManifestLocationCmd(manager, args));
 }

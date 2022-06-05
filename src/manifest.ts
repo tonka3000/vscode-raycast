@@ -1,4 +1,4 @@
-import { fileExists } from "./utils";
+import { fileExists, fileExistsSync } from "./utils";
 import * as fs from "fs";
 
 export enum PreferenceType {
@@ -38,6 +38,7 @@ export interface Preference {
 export interface Manifest {
   name?: string;
   title?: string;
+  icon?: string;
   description?: string;
   commands?: Command[];
   preferences?: Preference[];
@@ -50,6 +51,18 @@ export async function readManifestFile(filename: string | undefined): Promise<Ma
   }
   if (await fileExists(filename)) {
     const bytes = await fs.promises.readFile(filename);
+    const manifest = JSON.parse(bytes.toString()) as Manifest;
+    return manifest;
+  }
+  return undefined;
+}
+
+export function readManifestFileSync(filename: string | undefined): Manifest | undefined {
+  if (filename === undefined) {
+    return undefined;
+  }
+  if (fileExistsSync(filename)) {
+    const bytes = fs.readFileSync(filename);
     const manifest = JSON.parse(bytes.toString()) as Manifest;
     return manifest;
   }

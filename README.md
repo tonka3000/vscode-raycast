@@ -28,6 +28,7 @@ This is a [Raycast](https://raycast.com) extension for VSCode. This should help 
 - ✅ Builtin code snippet - just type raycast in a `.tsx` file
 - ✅ Open [Documentation](https://developers.raycast.com)
 - ✅ Search in [Documentation](https://developers.raycast.com)
+- ✅ Raycast Treeview for easy navigation
 
 ## Requirements
 
