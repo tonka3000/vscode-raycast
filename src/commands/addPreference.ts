@@ -179,6 +179,7 @@ export async function addPreferenceCmd(manager: ExtensionManager) {
         j.save();
 
         vscode.window.showInformationMessage(`Adding preference '${name}' successful`);
+        await manager.updateState();
       }
     } else {
       throw Error("Workspace does not contain a package.json file");
