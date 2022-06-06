@@ -140,9 +140,6 @@ export async function addCommandCmd(manager: ExtensionManager) {
           return undefined;
         }
 
-        const j = editJsonFile(pkgJSON);
-        j.append("commands", cmd);
-        j.save();
         const srcFolder = path.join(ws.uri.fsPath, "src");
         if (!(await fileExists(srcFolder))) {
           fs.promises.mkdir(srcFolder, { recursive: true });
@@ -159,8 +156,12 @@ export async function addCommandCmd(manager: ExtensionManager) {
           ];
           fs.promises.writeFile(tsxFilename, lines.join("\n"));
         }
+        const j = editJsonFile(pkgJSON);
+        j.append("commands", cmd);
+        j.save();
 
         vscode.window.showInformationMessage(`Adding command '${commandID}' successful`);
+        await manager.updateState();
       }
     } else {
       throw Error("Workspace does not contain a package.json file");

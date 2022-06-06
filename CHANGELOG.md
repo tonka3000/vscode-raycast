@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.5.1
+
+- Use dark theme raycast logo
+- Treeview get updated after using `Add Command` or `Add Preference`
+
 ## 0.5.0
 
 - Add Raycast Treeview
