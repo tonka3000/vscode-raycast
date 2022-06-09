@@ -135,16 +135,35 @@ async function askLabel(pref: Preference): Promise<string | undefined> {
   }
 }
 
-export async function addPreferenceCmd(manager: ExtensionManager) {
+export async function addPreferenceCmd(manager: ExtensionManager, args: any[] | undefined) {
   manager.logger.debug("add preference to package.json");
   const ws = manager.getActiveWorkspace();
   if (ws) {
+    let cmdName: string | undefined;
+    if (args && args.length > 0) {
+      const a0 = args[0];
+      if (typeof a0 === "string") {
+        const cmdNameText = a0 as string;
+        if (cmdNameText.length > 0) {
+          cmdName = cmdNameText;
+        }
+      }
+    }
     const pkgJSON = path.join(ws.uri.fsPath, "package.json");
     if (await fileExists(pkgJSON)) {
       const bytes = await fs.promises.readFile(pkgJSON);
       const manifest = JSON.parse(bytes.toString()) as Manifest;
       const pref: Preference = {};
-      const name = await askName(pref, manifest.preferences?.map((c) => c.name || "") || []);
+      let existingCmds: string[] = [];
+      if (cmdName) {
+        const c = manifest.commands?.find((c) => c.name === cmdName);
+        if (c && c.preferences && c.preferences) {
+          existingCmds = c.preferences.map((p) => p.name || "") || [];
+        }
+      } else {
+        existingCmds = manifest.preferences?.map((c) => c.name || "") || [];
+      }
+      const name = await askName(pref, existingCmds);
       if (name) {
         if ((await askDescription(pref)) === undefined) {
           return;
@@ -175,7 +194,15 @@ export async function addPreferenceCmd(manager: ExtensionManager) {
         // TODO add user based 'default' and 'data' handling
 
         const j = editJsonFile(pkgJSON);
-        j.append("preferences", pref);
+        if (cmdName && cmdName.length > 0) {
+          const index = manifest.commands?.findIndex((c) => c.name === cmdName);
+          if (index === undefined) {
+            throw Error(`Could not find command ${cmdName}`);
+          }
+          j.append(`commands.${index}.preferences`, pref);
+        } else {
+          j.append("preferences", pref);
+        }
         j.save();
 
         vscode.window.showInformationMessage(`Adding preference '${name}' successful`);

@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.6.0
+
+- Add Command Preferences to Treeview
+- Add Command mode to Treeview
+
 ## 0.5.1
 
 - Use dark theme raycast logo

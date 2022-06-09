@@ -32,13 +32,42 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
       if (element instanceof CommandsTreeItem) {
         const cmds = mani?.commands || [];
         return Promise.resolve(
-          cmds.map((c) => new CommandTreeItem(c, this.manager, this.manifest, vscode.TreeItemCollapsibleState.None))
+          cmds.map(
+            (c) =>
+              new CommandTreeItem(
+                c,
+                this.manager,
+                this.manifest,
+                (c.preferences && c.preferences.length) || c.mode
+                  ? vscode.TreeItemCollapsibleState.Collapsed
+                  : vscode.TreeItemCollapsibleState.None
+              )
+          )
         );
       } else if (element instanceof PreferencesTreeItem) {
-        const prefs = mani?.preferences || [];
+        const cmd = element.cmd;
+        let prefs = mani?.preferences || [];
+        if (cmd && cmd.name && cmd.name.length > 0) {
+          prefs = cmd.preferences || [];
+        }
         return Promise.resolve(
-          prefs.map((p) => new PreferenceTreeItem(p, this.manager, this.manifest, vscode.TreeItemCollapsibleState.None))
+          prefs.map(
+            (p) => new PreferenceTreeItem(p, this.manager, this.manifest, vscode.TreeItemCollapsibleState.None, cmd)
+          )
         );
+      } else if (element instanceof CommandTreeItem) {
+        const prefs = element.cmd?.preferences || [];
+        const children: RaycastTreeItem[] = [];
+        if (element.cmd.mode) {
+          children.push(new CommandModeTreeItem(element.cmd));
+        }
+        children.push(
+          new PreferencesTreeItem(
+            prefs.length > 0 ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.None,
+            element.cmd
+          )
+        );
+        return Promise.resolve(children);
       }
     }
     return Promise.resolve([]);
@@ -118,10 +147,10 @@ export class CommandTreeItem extends RaycastTreeItem {
   }
 }
 
-class PreferencesTreeItem extends RaycastTreeItem {
-  constructor(public readonly collapsibleState: vscode.TreeItemCollapsibleState) {
+export class PreferencesTreeItem extends RaycastTreeItem {
+  constructor(public readonly collapsibleState: vscode.TreeItemCollapsibleState, public readonly cmd?: Command) {
     super("Preferences", collapsibleState);
-    this.contextValue = "preferences";
+    this.contextValue = cmd === undefined ? "preferences" : "command-preferences";
     this.iconPath = new vscode.ThemeIcon("gear");
   }
 }
@@ -166,7 +195,8 @@ export class PreferenceTreeItem extends RaycastTreeItem {
     public readonly preference: Preference,
     public readonly manager: ExtensionManager,
     public readonly manifest: Manifest | undefined,
-    public readonly collapsibleState: vscode.TreeItemCollapsibleState
+    public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+    public readonly cmd?: Command
   ) {
     super(preference.title || preference.name || "?", collapsibleState);
     if (preference.type === "checkbox") {
@@ -179,6 +209,20 @@ export class PreferenceTreeItem extends RaycastTreeItem {
     this.contextValue = "preference";
     this.command = {
       command: "raycast.goto.preference",
+      title: "",
+      arguments: [this],
+    };
+  }
+}
+
+export class CommandModeTreeItem extends RaycastTreeItem {
+  constructor(public readonly cmd: Command) {
+    super("Mode", vscode.TreeItemCollapsibleState.None);
+    this.description = cmd.mode ? cmd.mode : "";
+    this.iconPath = new vscode.ThemeIcon(cmd.mode && cmd.mode === "no-view" ? "eye-closed" : "eye");
+    this.contextValue = "mode";
+    this.command = {
+      command: "raycast.goto.command.mode",
       title: "",
       arguments: [this],
     };
