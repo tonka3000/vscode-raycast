@@ -139,7 +139,7 @@ function getObject(root: ValueNode, path: string): ValueNode | undefined {
         return undefined;
       }
       const num = Number(s);
-      const queryRegex = /\[(\w+)=(\w+)\]/; // e.g. [myvar=myval]
+      const queryRegex = /\[(\w+)=(.+)\]/; // e.g. [myvar=myval]
       const match = s.match(queryRegex);
       if (match) {
         const key = match[1];

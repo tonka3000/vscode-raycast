@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.6.1
+
+- Fix problem in goto command mode when command name containing special characters
+
 ## 0.6.0
 
 - Add Command Preferences to Treeview
