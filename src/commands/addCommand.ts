@@ -16,6 +16,9 @@ async function askName(cmd: Command, existingCmds: string[]): Promise<string | u
       if (text.length <= 0) {
         return "Name could not be empty";
       }
+      if (text.length < 2) {
+        return "Command Name needs to have at least 2 characters";
+      }
       if (existingCmds.includes(text)) {
         return "Command already exists";
       }
@@ -34,6 +37,12 @@ async function askTitle(cmd: Command): Promise<string | undefined> {
     value: capitalizeFirstLetter(cmd.name),
     placeHolder: "Enter Command Title or leave empty",
     title: "Title",
+    validateInput: (text) => {
+      if (text.length > 0 && text.length < 2) {
+        return "Command Title needs to have at least 2 characters";
+      }
+      return null;
+    },
   });
   if (result !== undefined) {
     if (result.length > 0) {
@@ -49,6 +58,12 @@ async function askSubtitle(cmd: Command): Promise<string | undefined> {
   const result = await vscode.window.showInputBox({
     placeHolder: "Enter Subtitle or leave empty",
     title: "Subtitle",
+    validateInput: (text) => {
+      if (text.length > 0 && text.length < 2) {
+        return "Subtitle needs to have at least 2 characters";
+      }
+      return null;
+    },
   });
   if (result !== undefined) {
     if (result.length > 0) {
@@ -67,6 +82,9 @@ async function askDescription(cmd: Command): Promise<string | undefined> {
     validateInput: (text) => {
       if (text.length <= 0) {
         return "Description could not be empty";
+      }
+      if (text.length < 12) {
+        return "Description needs to have at least 12 characters";
       }
       return null;
     },

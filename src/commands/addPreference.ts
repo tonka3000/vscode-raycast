@@ -14,6 +14,9 @@ async function askName(pref: Preference, existingPrefs: string[]): Promise<strin
       if (text.length <= 0) {
         return "Preference Name could not be empty";
       }
+      if (text.length < 2) {
+        return "Command Name needs to have at least 2 characters";
+      }
       if (existingPrefs.includes(text)) {
         return "Preference already exists";
       }
@@ -32,6 +35,9 @@ async function askTitle(pref: Preference): Promise<string | undefined> {
     placeHolder: pref.type === PreferenceType.checkbox ? "Enter Title or leave empty" : "Enter Title",
     title: "Title",
     validateInput: (text) => {
+      if (text.length > 0 && text.length < 2) {
+        return "Title needs to have at least 2 characters";
+      }
       if (pref.type !== PreferenceType.checkbox && text.length <= 0) {
         return `Title could not be empty when the type is ${pref.type}`;
       }
@@ -70,6 +76,9 @@ async function askDescription(cmd: Command): Promise<string | undefined> {
     validateInput: (text) => {
       if (text.length <= 0) {
         return "Description could not be empty";
+      }
+      if (text.length < 8) {
+        return "Description needs to have at least 8 characters";
       }
       return null;
     },
