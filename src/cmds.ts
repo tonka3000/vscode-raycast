@@ -15,6 +15,8 @@ import { attachDebuggerCmd } from "./commands/attachdebugger";
 import { refreshTreeCmd } from "./commands/refreshtree";
 import { gotoPreferenceManifestLocationCmd } from "./commands/gotopreflocation";
 import { gotoCommandManifestLocationCmd } from "./commands/gotocmdlocation";
+import { addCommandPreferenceCmd } from "./commands/addCommandPreference";
+import { gotoCommandModeManifestLocationCmd } from "./commands/gotocmdmodelocation";
 
 export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("lint", async () => lintCmd(manager));
@@ -25,7 +27,8 @@ export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("opendocs", async () => openDocsCmd(manager));
   manager.registerCommand("searchdocs", async () => searchDocsCmd(manager));
   manager.registerCommand("addcommand", async () => addCommandCmd(manager));
-  manager.registerCommand("addpreference", async () => addPreferenceCmd(manager));
+  manager.registerCommand("addpreference", async (...args: any[]) => addPreferenceCmd(manager, args));
+  manager.registerCommand("addcommandpreference", async (...args: any[]) => addCommandPreferenceCmd(manager, args));
   manager.registerCommand("insertimageasset", async () => insertImageAssetCmd(manager));
   manager.registerCommand("login", async () => loginCmd(manager));
   manager.registerCommand("publish", async () => publicCmd(manager));
@@ -35,4 +38,7 @@ export function registerAllCommands(manager: ExtensionManager) {
     gotoPreferenceManifestLocationCmd(manager, args)
   );
   manager.registerCommand("goto.command", async (...args: any[]) => gotoCommandManifestLocationCmd(manager, args));
+  manager.registerCommand("goto.command.mode", async (...args: any[]) =>
+    gotoCommandModeManifestLocationCmd(manager, args)
+  );
 }

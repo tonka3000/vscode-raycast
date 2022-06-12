@@ -1,44 +1,14 @@
 import { ExtensionManager } from "../manager";
 import { CommandTreeItem } from "../tree";
 import * as vscode from "vscode";
-import * as fs from "fs";
 import { showTextDocumentAtPosition } from "../utils";
-import { ObjectNode, ArrayNode, LiteralNode } from "json-to-ast";
-import parse = require("json-to-ast");
 import path = require("path");
-import { readManifestFile } from "../manifest";
+import { readManifestAST, readManifestFile } from "../manifest";
 
 async function getCommandPositionInFile(filename: string, cmdName: string): Promise<vscode.Position | undefined> {
   try {
-    const bytes = await fs.promises.readFile(filename);
-    const text = bytes.toString();
-    const ast = parse(text, { loc: true }) as ObjectNode;
-    const prefs = ast.children.find((e) => e.key.value === "commands");
-    if (prefs) {
-      const ar = prefs.value as ArrayNode;
-      for (let i = 0; i < ar.children.length; i++) {
-        const e = ar.children[i];
-        if (e.type === "Object") {
-          const prefNameNode = e.children.find((e) => {
-            if (e.key.value === "name") {
-              if (e.value.type === "Literal") {
-                const l = e.value as LiteralNode;
-                const val = l.value?.toString();
-                if (val === cmdName) {
-                  return val;
-                }
-              }
-            }
-          });
-          if (prefNameNode) {
-            if (!e.loc) {
-              return undefined;
-            }
-            return new vscode.Position(e.loc.start.line, e.loc.start.column);
-          }
-        }
-      }
-    }
+    const mani = await readManifestAST(filename);
+    return mani.getPosition(`commands.[name=${cmdName}]`);
   } catch (error) {}
   return undefined;
 }
