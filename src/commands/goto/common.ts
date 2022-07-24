@@ -1,17 +1,27 @@
-import { ExtensionManager } from "../manager";
-import { readManifestAST, readManifestFile } from "../manifest";
 import * as vscode from "vscode";
-import { CommandModeTreeItem } from "../tree";
-import { showTextDocumentAtPosition } from "../utils";
+import { ExtensionManager } from "../../manager";
+import { Command, readManifestAST, readManifestFile } from "../../manifest";
+import { RaycastTreeItem } from "../../tree";
+import { showTextDocumentAtPosition } from "../../utils";
 
-export async function gotoCommandModeManifestLocationCmd(manager: ExtensionManager, args: any[]) {
+export interface CommandLocationArgs {
+  manager: ExtensionManager;
+  args: any[];
+  property: string;
+  filterCommand?: (cmd: Command) => boolean;
+}
+
+export async function gotoCommandPropertyLocation(clargs: CommandLocationArgs) {
   let cmdName: string | undefined;
+  const args = clargs.args;
+  const manager = clargs.manager;
   if (args && args.length > 0) {
     const a0 = args[0];
     if (a0 === undefined) {
       const manifest = await readManifestFile(manager.getActiveWorkspacePackageFilename());
       if (manifest) {
-        const cmds: vscode.QuickPickItem[] | undefined = manifest.commands?.map((c) => ({
+        const filteredCmds = clargs.filterCommand ? manifest.commands?.filter(clargs.filterCommand) : manifest.commands;
+        const cmds: vscode.QuickPickItem[] | undefined = filteredCmds?.map((c) => ({
           label: c.title || c.name || "?",
           description: c.name || "?",
         }));
@@ -29,12 +39,13 @@ export async function gotoCommandModeManifestLocationCmd(manager: ExtensionManag
       } else {
         throw Error("Could not read manifest");
       }
-    } else if (a0 instanceof CommandModeTreeItem) {
-      const item = a0 as CommandModeTreeItem;
-      if (!item.cmd.name) {
+    } else if (a0 instanceof RaycastTreeItem) {
+      const item = a0 as RaycastTreeItem;
+      const itemAny = item as any;
+      if (!itemAny.cmd?.name) {
         throw Error("No command name defined");
       }
-      cmdName = item.cmd?.name;
+      cmdName = itemAny.cmd?.name;
     } else {
       throw Error("Wrong argument type");
     }
@@ -45,7 +56,7 @@ export async function gotoCommandModeManifestLocationCmd(manager: ExtensionManag
       throw Error("No active workspace");
     }
     const mani = await readManifestAST(filename);
-    const pos = mani.getPosition(`commands.[name=${cmdName}].mode`);
+    const pos = mani.getPosition(`commands.[name=${cmdName}].${clargs.property}`);
     const uri = vscode.Uri.file(filename);
     await showTextDocumentAtPosition(uri, pos);
   }

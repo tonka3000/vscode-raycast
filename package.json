@@ -2,7 +2,7 @@
   "name": "raycast",
   "displayName": "Raycast",
   "description": "",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "engines": {
     "vscode": "^1.67.0"
   },
@@ -28,6 +28,8 @@
     "onCommand:raycast.refreshtree",
     "onCommand:raycast.goto.preference",
     "onCommand:raycast.goto.command",
+    "onCommand:raycast.goto.command.mode",
+    "onCommand:raycast.goto.command.interval",
     "onView:raycast",
     "workspaceContains:package.json"
   ],
@@ -130,6 +132,12 @@
         "title": "Go to Command Mode Manifest Location",
         "category": "Raycast",
         "icon": "$(code)"
+      },
+      {
+        "command": "raycast.goto.command.interval",
+        "title": "Go to Command Interval Manifest Location",
+        "category": "Raycast",
+        "icon": "$(code)"
       }
     ],
     "menus": {
@@ -227,6 +235,11 @@
         {
           "command": "raycast.goto.command.mode",
           "when": "view == raycast && viewItem == mode",
+          "group": "inline"
+        },
+        {
+          "command": "raycast.goto.command.interval",
+          "when": "view == raycast && viewItem == interval",
           "group": "inline"
         }
       ]
