@@ -5,6 +5,7 @@
 - Add support for `menu-bar` mode
 - Add support for background refresh parameter `interval`
 - Add `Open Command File` command
+- Add command templates based on `mode`
 
 ## 0.6.1
 

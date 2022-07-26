@@ -191,7 +191,7 @@ export async function addCommandCmd(manager: ExtensionManager) {
         }
         const tsxFilename = path.join(srcFolder, `${cmd.name}.tsx`);
         if (!(await fileExists(tsxFilename))) {
-          const lines: string[] = [
+          let lines: string[] = [
             'import { List } from "@raycast/api";',
             "",
             `export default function ${capitalizeFirstLetter(cmd.name)?.replace("_", "")}Command(): JSX.Element {`,
@@ -199,6 +199,36 @@ export async function addCommandCmd(manager: ExtensionManager) {
             "}",
             "",
           ];
+          switch (cmd.mode) {
+            case "no-view":
+              {
+                lines = [
+                  'import { showToast, Toast } from "@raycast/api";',
+                  "",
+                  "export default async function Main() {",
+                  '  await showToast(Toast.Style.Failure, "example no-view command");',
+                  "}",
+                  "",
+                ];
+              }
+              break;
+            case "menu-bar":
+              {
+                lines = [
+                  'import { MenuBarExtra, showHUD } from "@raycast/api";',
+                  "",
+                  "export default function MenuCommand(): JSX.Element {",
+                  "  return (",
+                  '    <MenuBarExtra title="My Menu">',
+                  '      <MenuBarExtra.Item title="Child" onAction={() => showHUD("Child Menu from Menubar")} />',
+                  "    </MenuBarExtra>",
+                  "  );",
+                  "}",
+                  "",
+                ];
+              }
+              break;
+          }
           fs.promises.writeFile(tsxFilename, lines.join("\n"));
         }
         const j = editJsonFile(pkgJSON);
