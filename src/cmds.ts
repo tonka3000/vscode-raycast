@@ -18,6 +18,7 @@ import { gotoCommandManifestLocationCmd } from "./commands/gotocmdlocation";
 import { addCommandPreferenceCmd } from "./commands/addCommandPreference";
 import { gotoCommandModeManifestLocationCmd } from "./commands/goto/mode";
 import { gotoCommandIntervalManifestLocationCmd } from "./commands/goto/interval";
+import { openCommandCmd } from "./commands/opencommand";
 
 export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("lint", async () => lintCmd(manager));
@@ -26,6 +27,7 @@ export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("rundev", async () => runDevCmd(manager));
   manager.registerCommand("migration", async () => runMigrationCmd(manager));
   manager.registerCommand("opendocs", async () => openDocsCmd(manager));
+  manager.registerCommand("opencommand", async (...args: any[]) => openCommandCmd(manager, args));
   manager.registerCommand("searchdocs", async () => searchDocsCmd(manager));
   manager.registerCommand("addcommand", async () => addCommandCmd(manager));
   manager.registerCommand("addpreference", async (...args: any[]) => addPreferenceCmd(manager, args));

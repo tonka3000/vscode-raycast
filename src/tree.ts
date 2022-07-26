@@ -143,9 +143,9 @@ export class CommandTreeItem extends RaycastTreeItem {
       }
     }
     this.command = {
-      command: "vscode.open",
+      command: "raycast.opencommand",
       title: "",
-      arguments: [path.join(ws?.uri.fsPath || "", "src", `${cmd.name}.tsx`)],
+      arguments: [this],
     };
   }
 }
