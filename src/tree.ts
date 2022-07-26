@@ -61,6 +61,9 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
         if (element.cmd.mode) {
           children.push(new CommandModeTreeItem(element.cmd));
         }
+        if (element.cmd.interval) {
+          children.push(new CommandIntervalTreeItem(element.cmd));
+        }
         children.push(
           new PreferencesTreeItem(
             prefs.length > 0 ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.None,
@@ -107,7 +110,7 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
   }
 }
 
-class RaycastTreeItem extends vscode.TreeItem {
+export class RaycastTreeItem extends vscode.TreeItem {
   constructor(public label?: string, public readonly collapsibleState?: vscode.TreeItemCollapsibleState) {
     super(label || "", collapsibleState);
   }
@@ -140,9 +143,9 @@ export class CommandTreeItem extends RaycastTreeItem {
       }
     }
     this.command = {
-      command: "vscode.open",
+      command: "raycast.opencommand",
       title: "",
-      arguments: [path.join(ws?.uri.fsPath || "", "src", `${cmd.name}.tsx`)],
+      arguments: [this],
     };
   }
 }
@@ -215,14 +218,53 @@ export class PreferenceTreeItem extends RaycastTreeItem {
   }
 }
 
+function getCommandModeIcon(type: string | undefined): vscode.ThemeIcon | undefined {
+  let icon: string | undefined;
+  switch (type) {
+    case "view":
+      {
+        icon = "eye";
+      }
+      break;
+    case "no-view":
+      {
+        icon = "eye-closed";
+      }
+      break;
+    case "menu-bar":
+      {
+        icon = "window";
+      }
+      break;
+  }
+  if (!icon) {
+    icon = "eye";
+  }
+  return new vscode.ThemeIcon(icon);
+}
+
 export class CommandModeTreeItem extends RaycastTreeItem {
   constructor(public readonly cmd: Command) {
     super("Mode", vscode.TreeItemCollapsibleState.None);
     this.description = cmd.mode ? cmd.mode : "";
-    this.iconPath = new vscode.ThemeIcon(cmd.mode && cmd.mode === "no-view" ? "eye-closed" : "eye");
+    this.iconPath = getCommandModeIcon(cmd.mode);
     this.contextValue = "mode";
     this.command = {
       command: "raycast.goto.command.mode",
+      title: "",
+      arguments: [this],
+    };
+  }
+}
+
+export class CommandIntervalTreeItem extends RaycastTreeItem {
+  constructor(public readonly cmd: Command) {
+    super("Interval", vscode.TreeItemCollapsibleState.None);
+    this.description = cmd.interval ? cmd.interval : "";
+    this.iconPath = new vscode.ThemeIcon("sync");
+    this.contextValue = "interval";
+    this.command = {
+      command: "raycast.goto.command.interval",
       title: "",
       arguments: [this],
     };

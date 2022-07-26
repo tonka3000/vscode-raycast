@@ -21,6 +21,7 @@ This is a [Raycast](https://raycast.com) extension for VSCode. This should help 
 
 - ✅ Add preference (`default` and `data` are not support for now)
 - ✅ Add command
+- ✅ Open Command File
 - ✅ Image Asset filename via dropdown into active text editor
 - ✅ Image Asset autocompletion for
   - icons in `.tsx` files (`source:` and `icon=` are supported)

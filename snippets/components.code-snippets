@@ -1,34 +1,25 @@
 {
-  "raycast/list" :{
-    "scope" : "typescriptreact",
+  "raycast/list": {
+    "scope": "typescriptreact",
     "prefix": "raycast:list_example",
-    "body": [
-      "<List>",
-      "  <List.Item title=\"Item 1\"/>",
-      "  <List.Item title=\"Item 2\"/>",
-      "</List>"
-    ]
+    "body": ["<List>", "  <List.Item title=\"Item 1\"/>", "  <List.Item title=\"Item 2\"/>", "</List>"]
   },
-  "raycast/list/item" :{
-    "scope" : "typescriptreact",
+  "raycast/list/item": {
+    "scope": "typescriptreact",
     "prefix": "raycast:list:item",
     "body": "<List.Item title=\"$1\"/>"
   },
-  "raycast/list/item_actions" :{
-    "scope" : "typescriptreact",
+  "raycast/list/item_actions": {
+    "scope": "typescriptreact",
     "prefix": "raycast:list:item_actions",
-    "body": [
-      "<List.Item title=\"$1\" actions={<ActionPanel>$0</ActionPanel>} />"
-    ]
+    "body": ["<List.Item title=\"$1\" actions={<ActionPanel>$0</ActionPanel>} />"]
   },
   "raycast/detail": {
     "scope": "typescriptreact",
     "prefix": "raycast:detail",
-    "body": [
-      "<Detail markdown=\"A example text\"/>"
-    ]
+    "body": ["<Detail markdown=\"A example text\"/>"]
   },
-  "raycast/detail_meta":{
+  "raycast/detail_meta": {
     "scope": "typescriptreact",
     "prefix": "raycast:detail:meta",
     "body": [
@@ -55,18 +46,14 @@
   "raycast/detail/meta/taglist": {
     "scope": "typescriptreact",
     "prefix": "raycast:detail:meta:taglist",
-    "body": [
-      "<Detail.Metadata.TagList title=\"$1\">",
-      "  $0",
-      "</Detail.Metadata.TagList>"
-    ]
+    "body": ["<Detail.Metadata.TagList title=\"$1\">", "  $0", "</Detail.Metadata.TagList>"]
   },
   "raycast/detail/meta/taglist/item": {
     "scope": "typescriptreact",
     "prefix": "raycast:detail:meta:taglist:item",
     "body": "<Detail.Metadata.TagList.Item text=\"$1\" color=\"$2\"/>"
   },
-  "raycast/form_example" : {
+  "raycast/form_example": {
     "scope": "typescriptreact",
     "prefix": "raycast:form_example",
     "body": [
@@ -84,7 +71,7 @@
       "</Form>"
     ]
   },
-  "raycast/actionpanel_example" : {
+  "raycast/actionpanel_example": {
     "scope": "typescriptreact",
     "prefix": "raycast:actionpanel_example",
     "body": [
@@ -98,61 +85,57 @@
       "</ActionPanel>"
     ]
   },
-  "raycast/actionpanel" : {
+  "raycast/actionpanel": {
     "scope": "typescriptreact",
     "prefix": "raycast:actionpanel",
-    "body": [
-      "<ActionPanel title=\"$1\">",
-      "  $0",
-      "</ActionPanel>"
-    ]
+    "body": ["<ActionPanel title=\"$1\">", "  $0", "</ActionPanel>"]
   },
-  "raycast/actionpanel/openinbrowser" : {
+  "raycast/actionpanel/openinbrowser": {
     "scope": "typescriptreact",
     "prefix": "raycast:actionpanel:openinbrowser",
     "body": "<Action.OpenInBrowser url=\"$1\" />"
   },
-  "raycast/actionpanel/copytoclipboard" : {
+  "raycast/actionpanel/copytoclipboard": {
     "scope": "typescriptreact",
     "prefix": "raycast:actionpanel:copytoclipboard",
     "body": "<Action.CopyToClipboard title=\"$1\" content=\"$2\" />"
   },
-  "raycast/actionpanel/action" : {
+  "raycast/actionpanel/action": {
     "scope": "typescriptreact",
     "prefix": "raycast:actionpanel:action",
     "body": "<Action.Open title=\"$1\" target={\"$2\"} />"
   },
-  "raycast/actionpanel/open" : {
+  "raycast/actionpanel/open": {
     "scope": "typescriptreact",
     "prefix": "raycast:actionpanel:open",
     "body": "<Action.Open title=\"$1\" target={\"$2\"} />"
   },
-  "raycast/actionpanel/paste" : {
+  "raycast/actionpanel/paste": {
     "scope": "typescriptreact",
     "prefix": "raycast:actionpanel:paste",
     "body": "<Action.Paste content=\"$1\" />"
   },
-  "raycast/actionpanel/push" : {
+  "raycast/actionpanel/push": {
     "scope": "typescriptreact",
     "prefix": "raycast:actionpanel:push",
     "body": "<Action.Push title=\"$1\" target={${2:<List />${TM_SELECTED_TEXT}}} />"
   },
-  "raycast/actionpanel/openwith" : {
+  "raycast/actionpanel/openwith": {
     "scope": "typescriptreact",
     "prefix": "raycast:actionpanel:openwith",
     "body": "<Action.OpenWith path=\"$1\" />"
   },
-  "raycast/actionpanel/showinfinder" : {
+  "raycast/actionpanel/showinfinder": {
     "scope": "typescriptreact",
     "prefix": "raycast:actionpanel:showinfinder",
     "body": "<Action.ShowInFinder path=\"$1\" />"
   },
-  "raycast/actionpanel/submitform" : {
+  "raycast/actionpanel/submitform": {
     "scope": "typescriptreact",
     "prefix": "raycast:actionpanel:submitform",
     "body": "<Action.SubmitForm title=\"Submit Answer\" onSubmit={(values) => console.log(values)} />"
   },
-  "raycast/actionpanel/trash" : {
+  "raycast/actionpanel/trash": {
     "scope": "typescriptreact",
     "prefix": "raycast:actionpanel:trash",
     "body": "<Action.Trash paths=\"$1\" />"
