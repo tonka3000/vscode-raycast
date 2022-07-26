@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.7
+
+- Add support for `menu-bar` mode
+- Add support for background refresh parameter `interval`
+
 ## 0.6.1
 
 - Fix problem in goto command mode when command name containing special characters

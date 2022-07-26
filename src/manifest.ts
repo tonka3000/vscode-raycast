@@ -20,6 +20,7 @@ export interface Command {
   mode?: string;
   icon?: string;
   preferences?: Preference[];
+  interval?: string;
 }
 
 export interface PreferenceData {

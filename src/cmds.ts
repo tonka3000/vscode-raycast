@@ -16,7 +16,8 @@ import { refreshTreeCmd } from "./commands/refreshtree";
 import { gotoPreferenceManifestLocationCmd } from "./commands/gotopreflocation";
 import { gotoCommandManifestLocationCmd } from "./commands/gotocmdlocation";
 import { addCommandPreferenceCmd } from "./commands/addCommandPreference";
-import { gotoCommandModeManifestLocationCmd } from "./commands/gotocmdmodelocation";
+import { gotoCommandModeManifestLocationCmd } from "./commands/goto/mode";
+import { gotoCommandIntervalManifestLocationCmd } from "./commands/goto/interval";
 
 export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("lint", async () => lintCmd(manager));
@@ -40,5 +41,8 @@ export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("goto.command", async (...args: any[]) => gotoCommandManifestLocationCmd(manager, args));
   manager.registerCommand("goto.command.mode", async (...args: any[]) =>
     gotoCommandModeManifestLocationCmd(manager, args)
+  );
+  manager.registerCommand("goto.command.interval", async (...args: any[]) =>
+    gotoCommandIntervalManifestLocationCmd(manager, args)
   );
 }

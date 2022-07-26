@@ -100,7 +100,7 @@ async function askDescription(cmd: Command): Promise<string | undefined> {
 }
 
 async function askMode(cmd: Command): Promise<string | undefined> {
-  const result = await vscode.window.showQuickPick(["view", "no-view"], {
+  const result = await vscode.window.showQuickPick(["view", "no-view", "menu-bar"], {
     placeHolder: "Choose Command Mode",
     title: "Mode",
   });
@@ -124,6 +124,28 @@ async function askIcon(cmd: Command, rootFolder: string): Promise<string | undef
   if (result !== undefined) {
     if (result.length > 0) {
       cmd.icon = result;
+    }
+    return result;
+  } else {
+    return undefined;
+  }
+}
+
+async function askInterval(cmd: Command): Promise<string | undefined> {
+  const result = await vscode.window.showInputBox({
+    placeHolder: "e.g. 90s, 1m, 12h, 1d (min. 1m) or leave empty",
+    title: "Background Refresh Interval",
+    validateInput: (text) => {
+      const regexp = /^(\d+)(s|m|h|d)$/;
+      if (text.length > 0 && !text.match(regexp)) {
+        return "Invalid Interval Format";
+      }
+      return null;
+    },
+  });
+  if (result !== undefined) {
+    if (result.length > 0) {
+      cmd.interval = result;
     }
     return result;
   } else {
@@ -156,6 +178,11 @@ export async function addCommandCmd(manager: ExtensionManager) {
         }
         if ((await askIcon(cmd, ws.uri.fsPath)) === undefined) {
           return undefined;
+        }
+        if (cmd.mode === "no-view" || cmd.mode === "menu-bar") {
+          if ((await askInterval(cmd)) === undefined) {
+            return;
+          }
         }
 
         const srcFolder = path.join(ws.uri.fsPath, "src");
