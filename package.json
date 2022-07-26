@@ -30,6 +30,7 @@
     "onCommand:raycast.goto.command",
     "onCommand:raycast.goto.command.mode",
     "onCommand:raycast.goto.command.interval",
+    "onCommand:raycast.opencommand",
     "onView:raycast",
     "workspaceContains:package.json"
   ],
@@ -64,6 +65,11 @@
       {
         "command": "raycast.opendocs",
         "title": "Open Documentation",
+        "category": "Raycast"
+      },
+      {
+        "command": "raycast.opencommand",
+        "title": "Open Command File",
         "category": "Raycast"
       },
       {
