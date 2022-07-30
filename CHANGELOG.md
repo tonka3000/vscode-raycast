@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.8
+
+- Add support for command arguments
+- Add auto completion for script directives
+
 ## 0.7
 
 - Add support for `menu-bar` mode

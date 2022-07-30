@@ -20,6 +20,7 @@ export interface Command {
   mode?: string;
   icon?: string;
   preferences?: Preference[];
+  arguments?: Argument[];
   interval?: string;
 }
 
@@ -38,6 +39,13 @@ export interface Preference {
   default?: string | boolean;
   data?: PreferenceData[];
   label?: string;
+}
+
+export interface Argument {
+  name?: string;
+  type?: string;
+  placeholder?: string;
+  required?: boolean;
 }
 
 export interface Manifest {

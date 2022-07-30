@@ -2,7 +2,7 @@
   "name": "raycast",
   "displayName": "Raycast",
   "description": "",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "engines": {
     "vscode": "^1.67.0"
   },
@@ -96,6 +96,12 @@
         "icon": "$(add)"
       },
       {
+        "command": "raycast.command.arguments.add",
+        "title": "Add Command Argument",
+        "category": "Raycast",
+        "icon": "$(add)"
+      },
+      {
         "command": "raycast.insertimageasset",
         "title": "Insert Image Asset",
         "category": "Raycast"
@@ -144,6 +150,12 @@
         "title": "Go to Command Interval Manifest Location",
         "category": "Raycast",
         "icon": "$(code)"
+      },
+      {
+        "command": "raycast.goto.command.argument",
+        "title": "Go to Command Argument Manifest Location",
+        "category": "Raycast",
+        "icon": "$(code)"
       }
     ],
     "menus": {
@@ -173,7 +185,19 @@
           "when": "raycast.workspaceEnabled"
         },
         {
+          "command": "raycast.opencommand",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.addcommandpreference",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
           "command": "raycast.addpreference",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.command.arguments.add",
           "when": "raycast.workspaceEnabled"
         },
         {
@@ -199,6 +223,18 @@
         {
           "command": "raycast.goto.preference",
           "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.goto.command.interval",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.goto.command.mode",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.goto.command.argument",
+          "when": "false"
         },
         {
           "command": "raycast.refreshtree",
@@ -229,6 +265,11 @@
           "group": "inline"
         },
         {
+          "command": "raycast.command.arguments.add",
+          "when": "view == raycast && viewItem == command-arguments",
+          "group": "inline"
+        },
+        {
           "command": "raycast.goto.preference",
           "when": "view == raycast && viewItem == preference",
           "group": "inline"
@@ -246,6 +287,11 @@
         {
           "command": "raycast.goto.command.interval",
           "when": "view == raycast && viewItem == interval",
+          "group": "inline"
+        },
+        {
+          "command": "raycast.goto.command.argument",
+          "when": "view == raycast && viewItem == argument",
           "group": "inline"
         }
       ]
@@ -292,6 +338,9 @@
       {
         "language": "typescriptreact",
         "path": "./snippets/components.code-snippets"
+      },
+      {
+        "path": "./snippets/scripts.code-snippets"
       }
     ]
   },
