@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.8
+
+- Add support for command arguments
+
 ## 0.7
 
 - Add support for `menu-bar` mode
