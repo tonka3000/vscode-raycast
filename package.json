@@ -322,6 +322,9 @@
       {
         "language": "typescriptreact",
         "path": "./snippets/components.code-snippets"
+      },
+      {
+        "path": "./snippets/scripts.code-snippets"
       }
     ]
   },
