@@ -1,7 +1,7 @@
 import path = require("path");
 import * as vscode from "vscode";
 import { ExtensionManager } from "./manager";
-import { Command, Manifest, Preference, readManifestFileSync } from "./manifest";
+import { Argument, Command, Manifest, Preference, readManifestFileSync } from "./manifest";
 import { fileExistsSync, getModTimeSync } from "./utils";
 
 export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastTreeItem> {
@@ -70,7 +70,22 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
             element.cmd
           )
         );
+        const args = element.cmd?.arguments || [];
+        children.push(
+          new ArgumentsTreeItem(
+            args.length > 0 ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.None,
+            element.cmd
+          )
+        );
         return Promise.resolve(children);
+      } else if (element instanceof ArgumentsTreeItem) {
+        const cmd = element.cmd;
+        const args = cmd?.arguments || [];
+        return Promise.resolve(
+          args.map(
+            (a) => new ArgumentTreeItem(a, this.manager, this.manifest, vscode.TreeItemCollapsibleState.None, cmd)
+          )
+        );
       }
     }
     return Promise.resolve([]);
@@ -158,6 +173,14 @@ export class PreferencesTreeItem extends RaycastTreeItem {
   }
 }
 
+export class ArgumentsTreeItem extends RaycastTreeItem {
+  constructor(public readonly collapsibleState: vscode.TreeItemCollapsibleState, public readonly cmd?: Command) {
+    super("Arguments", collapsibleState);
+    this.contextValue = "command-arguments";
+    this.iconPath = new vscode.ThemeIcon("symbol-parameter");
+  }
+}
+
 function getPrefThemeIcon(type: string | undefined): vscode.ThemeIcon | undefined {
   let icon: string | undefined;
   switch (type) {
@@ -212,6 +235,48 @@ export class PreferenceTreeItem extends RaycastTreeItem {
     this.contextValue = "preference";
     this.command = {
       command: "raycast.goto.preference",
+      title: "",
+      arguments: [this],
+    };
+  }
+}
+
+function getArgumentThemeIcon(type: string | undefined): vscode.ThemeIcon | undefined {
+  let icon: string | undefined;
+  switch (type) {
+    case "text":
+      {
+        icon = "symbol-string";
+      }
+      break;
+    case "password":
+      {
+        icon = "gist-secret";
+      }
+      break;
+  }
+  if (!icon) {
+    icon = "symbol-parameter";
+  }
+  return new vscode.ThemeIcon(icon);
+}
+
+export class ArgumentTreeItem extends RaycastTreeItem {
+  constructor(
+    public readonly argument: Argument,
+    public readonly manager: ExtensionManager,
+    public readonly manifest: Manifest | undefined,
+    public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+    public readonly cmd?: Command
+  ) {
+    super(argument.name || "?", collapsibleState);
+    this.iconPath = getArgumentThemeIcon(argument.type);
+    this.description = argument.required === undefined ? undefined : argument.required ? "required" : undefined;
+    this.tooltip = argument.placeholder;
+
+    this.contextValue = "argument";
+    this.command = {
+      command: "raycast.goto.command.argument",
       title: "",
       arguments: [this],
     };
