@@ -2,57 +2,68 @@
   "raycast-script/schemaVersion": {
     "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
     "prefix": "@raycast.schemaVersion",
-    "body": "$LINE_COMMENT @raycast.schemaVersion 1"
+    "body": "$LINE_COMMENT @raycast.schemaVersion 1",
+    "description": "Schema version to prepare for future changes in the API. Currently there is only version 1 available."
   },
   "raycast-script/title": {
     "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
     "prefix": "@raycast.title",
-    "body": "$LINE_COMMENT @raycast.title ${1}"
+    "body": "$LINE_COMMENT @raycast.title ${1}",
+    "description": "Display name of the Script Command that is shown as title in the root search."
   },
   "raycast-script/author": {
     "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
     "prefix": "@raycast.author",
-    "body": "$LINE_COMMENT @raycast.author ${1}"
+    "body": "$LINE_COMMENT @raycast.author ${1}",
+    "description": "Define an author name to be part of the script commands documentation."
   },
   "raycast-script/authorURL": {
     "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
     "prefix": "@raycast.authorURL",
-    "body": "$LINE_COMMENT @raycast.authorURL ${1}"
+    "body": "$LINE_COMMENT @raycast.authorURL ${1}",
+    "description": "Author social media, website, email or anything to help the users to get in touch."
   },
   "raycast-script/description": {
     "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
     "prefix": "@raycast.description",
-    "body": "$LINE_COMMENT @raycast.description ${1}"
+    "body": "$LINE_COMMENT @raycast.description ${1}",
+    "description": "A brief description about the script command to be presented in the documentation."
   },
   "raycast-script/icon": {
     "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
     "prefix": "@raycast.icon",
-    "body": "$LINE_COMMENT @raycast.icon ${1}"
+    "body": "$LINE_COMMENT @raycast.icon ${1}",
+    "description": "Icon that is displayed in the root search. Can be an emoji, a file path (relative or full) or a remote URL (only https). Supported formats for images are PNG and JPEG. Please make sure to use small icons, recommended size - 64px."
   },
   "raycast-script/iconDark": {
     "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
     "prefix": "@raycast.iconDark",
-    "body": "$LINE_COMMENT @raycast.iconDark ${1}"
+    "body": "$LINE_COMMENT @raycast.iconDark ${1}",
+    "description": "Icon that is displayed in the root search in dark theme. Can be an emoji, a file path (relative or full) or a remote URL (only https). Supported formats for images are PNG and JPEG. Please make sure to use small icons, recommended size - 64px."
   },
   "raycast-script/packageName": {
     "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
     "prefix": "@raycast.packageName",
-    "body": "$LINE_COMMENT @raycast.packageName ${1}"
+    "body": "$LINE_COMMENT @raycast.packageName ${1}",
+    "description": "Display name of the package that is shown as subtitle in the root search. When not provided, the name will be inferred from the script directory name."
   },
   "raycast-script/currentDirectoryPath": {
     "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
     "prefix": "@raycast.currentDirectoryPath",
-    "body": "$LINE_COMMENT @raycast.currentDirectoryPath ${1}"
+    "body": "$LINE_COMMENT @raycast.currentDirectoryPath ${1}",
+    "description": "Path from which the script is executed. Default is the path of the script."
   },
   "raycast-script/needsConfirmation": {
     "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
     "prefix": "@raycast.needsConfirmation",
-    "body": "$LINE_COMMENT @raycast.needsConfirmation ${1|true,false|}"
+    "body": "$LINE_COMMENT @raycast.needsConfirmation ${1|true,false|}",
+    "description": "Specify true if you would like to show confirmation alert dialog before running the script. Can be helpful with destructive scripts like \"Quit All Apps\" or \"Empty Trash\". Default value is false."
   },
   "raycast-script/refreshTime": {
     "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
     "prefix": "@raycast.refreshTime",
-    "body": "$LINE_COMMENT @raycast.refreshTime ${1}"
+    "body": "$LINE_COMMENT @raycast.refreshTime ${1}",
+    "description": "Specify a refresh interval for inline mode scripts in seconds, minutes, hours or days. Examples: 10s, 1m, 12h, 1d. Note that the actual times can vary depending on how the OS prioritizes scheduled work. The minimum refresh interval is 10 seconds. If you have more than 10 inline commands, only the first 10 will be refreshed automatically; the rest have to be manually refreshed by navigating to them and pressing return."
   },
   "raycast-script/mode": {
     "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
