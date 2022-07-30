@@ -1,0 +1,67 @@
+{
+  "raycast-script/schemaVersion": {
+    "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
+    "prefix": "@raycast.schemaVersion",
+    "body": "$LINE_COMMENT @raycast.schemaVersion 1"
+  },
+  "raycast-script/title": {
+    "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
+    "prefix": "@raycast.title",
+    "body": "$LINE_COMMENT @raycast.title ${1}"
+  },
+  "raycast-script/author": {
+    "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
+    "prefix": "@raycast.author",
+    "body": "$LINE_COMMENT @raycast.author ${1}"
+  },
+  "raycast-script/authorURL": {
+    "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
+    "prefix": "@raycast.authorURL",
+    "body": "$LINE_COMMENT @raycast.authorURL ${1}"
+  },
+  "raycast-script/description": {
+    "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
+    "prefix": "@raycast.description",
+    "body": "$LINE_COMMENT @raycast.description ${1}"
+  },
+  "raycast-script/icon": {
+    "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
+    "prefix": "@raycast.icon",
+    "body": "$LINE_COMMENT @raycast.icon ${1}"
+  },
+  "raycast-script/iconDark": {
+    "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
+    "prefix": "@raycast.iconDark",
+    "body": "$LINE_COMMENT @raycast.iconDark ${1}"
+  },
+  "raycast-script/packageName": {
+    "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
+    "prefix": "@raycast.packageName",
+    "body": "$LINE_COMMENT @raycast.packageName ${1}"
+  },
+  "raycast-script/currentDirectoryPath": {
+    "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
+    "prefix": "@raycast.currentDirectoryPath",
+    "body": "$LINE_COMMENT @raycast.currentDirectoryPath ${1}"
+  },
+  "raycast-script/needsConfirmation": {
+    "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
+    "prefix": "@raycast.needsConfirmation",
+    "body": "$LINE_COMMENT @raycast.needsConfirmation ${1|true,false|}"
+  },
+  "raycast-script/refreshTime": {
+    "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
+    "prefix": "@raycast.refreshTime",
+    "body": "$LINE_COMMENT @raycast.refreshTime ${1}"
+  },
+  "raycast-script/mode": {
+    "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
+    "prefix": "@raycast.mode",
+    "body": "$LINE_COMMENT @raycast.mode ${1|silent,compact,inline,fullOutput|}"
+  },
+  "raycast-script/argument": {
+    "scope": "ruby,python,swift,shellscript,typescript,javascript,applescript",
+    "prefix": "@raycast.argument",
+    "body": "$LINE_COMMENT @raycast.argument${1|1,2,3|} { \"type\": \"text\", \"placeholder\": \"${3:Placeholder}\", \"optional\": ${4|true,false|} }"
+  }
+}
