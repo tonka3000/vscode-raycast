@@ -185,6 +185,14 @@
           "when": "raycast.workspaceEnabled"
         },
         {
+          "command": "raycast.opencommand",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.addcommandpreference",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
           "command": "raycast.addpreference",
           "when": "raycast.workspaceEnabled"
         },
@@ -214,6 +222,14 @@
         },
         {
           "command": "raycast.goto.preference",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.goto.command.interval",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.goto.command.mode",
           "when": "raycast.workspaceEnabled"
         },
         {
