@@ -2,7 +2,7 @@
   "name": "raycast",
   "displayName": "Raycast",
   "description": "",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "engines": {
     "vscode": "^1.67.0"
   },
@@ -342,7 +342,12 @@
       {
         "path": "./snippets/scripts.code-snippets"
       }
-    ]
+    ],
+    "themes": [{
+      "id": "raycast-dark",
+      "label": "Raycast Dark",
+      "path": "./theme/dark-theme.json"
+    }]
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
