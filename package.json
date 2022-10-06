@@ -346,6 +346,7 @@
     "themes": [{
       "id": "raycast-dark",
       "label": "Raycast Dark",
+      "uiTheme": "vs-dark",
       "path": "./theme/dark-theme.json"
     }]
   },
