@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.8.1
+
+- Add `.svg` files as whitelisted asset extension
+
 ## 0.8
 
 - Add support for command arguments
