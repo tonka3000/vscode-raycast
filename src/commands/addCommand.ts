@@ -116,7 +116,7 @@ async function askMode(cmd: Command): Promise<string | undefined> {
 
 async function askIcon(cmd: Command, rootFolder: string): Promise<string | undefined> {
   const assetsFolder = path.join(rootFolder, "assets");
-  const files = (await getAssetsFromFolder(assetsFolder)).filter((f) => f.endsWith(".png"));
+  const files = (await getAssetsFromFolder(assetsFolder)).filter((f) => f.endsWith(".png") || f.endsWith(".svg"));
   const result = await showCustomQuickPick(["", ...files], {
     placeholder: "Enter or choose icon or leave empty",
     title: "Icon",
