@@ -1,7 +1,8 @@
 import { ExtensionManager } from "./manager";
 import * as vscode from "vscode";
 import path = require("path");
-import * as fs from "fs/promises";
+import * as fs from "fs";
+import * as afs from "fs/promises";
 import { getErrorMessage } from "./utils";
 import { dirname, isAbsolute, resolve } from "path";
 
@@ -44,7 +45,8 @@ async function getCommands(): Promise<CommandMetadata[]> {
   return result;
 }
 
-async function runCommand(cmdID: string) {
+async function runCommand(cmdID: string, manager: ExtensionManager) {
+  manager.logger.debug(`Run command ${cmdID}`);
   await vscode.commands.executeCommand(cmdID);
 }
 
@@ -52,9 +54,9 @@ async function writeCommands(manager: ExtensionManager) {
   const cmds = await getCommands();
   const transitFolder = path.join(manager.context.globalStorageUri.fsPath, "transit");
   const commandsFilename = path.join(transitFolder, "commands.json");
-  await fs.mkdir(transitFolder, { recursive: true });
+  await afs.mkdir(transitFolder, { recursive: true });
   manager.logger.debug(`write commands to ${commandsFilename}`);
-  await fs.writeFile(commandsFilename, JSON.stringify(cmds));
+  await afs.writeFile(commandsFilename, JSON.stringify(cmds));
   manager.logger.debug("write succeeded");
   await writeExtensions(manager);
 }
@@ -75,13 +77,18 @@ function getExtensions(): ExtensionMetadata[] {
   return result;
 }
 
+function transitFolder(manager: ExtensionManager): string {
+  const result = path.join(manager.context.globalStorageUri.fsPath, "transit");
+  return result;
+}
+
 async function writeExtensions(manager: ExtensionManager) {
   const exts = getExtensions();
   const transitFolder = path.join(manager.context.globalStorageUri.fsPath, "transit");
   const commandsFilename = path.join(transitFolder, "extensions.json");
-  await fs.mkdir(transitFolder, { recursive: true });
+  await afs.mkdir(transitFolder, { recursive: true });
   manager.logger.debug(`write extensions to ${commandsFilename}`);
-  await fs.writeFile(commandsFilename, JSON.stringify(exts));
+  await afs.writeFile(commandsFilename, JSON.stringify(exts));
   manager.logger.debug("write succeeded");
 }
 
@@ -96,10 +103,10 @@ async function handleWriteCommands(uri: vscode.Uri, manager: ExtensionManager) {
   }
   const outputFilename = resolve(filename);
   const outputFolder = dirname(outputFilename);
-  await fs.mkdir(outputFolder, { recursive: true });
+  await afs.mkdir(outputFolder, { recursive: true });
   const cmds = await getCommands();
   manager.logger.debug(`write commands to ${outputFilename}`);
-  await fs.writeFile(outputFilename, JSON.stringify(cmds, null, 2));
+  await afs.writeFile(outputFilename, JSON.stringify(cmds, null, 2));
   manager.logger.debug("write succeeded");
 }
 
@@ -112,7 +119,7 @@ async function handleRunCommand(uri: vscode.Uri, manager: ExtensionManager) {
   for (const [key, value] of params.entries()) {
     console.log(`${key} = ${value}`);
   }
-  await runCommand(cmd);
+  await runCommand(cmd, manager);
 }
 
 async function handlePrintCommands(manager: ExtensionManager) {
@@ -133,6 +140,27 @@ async function handlePrintCommands(manager: ExtensionManager) {
   output.show();
 }
 
+interface Request {
+  command: string;
+  args?: Record<string, any>;
+}
+
+async function processRequest(requestFilename: string, manager: ExtensionManager) {
+  const data = await afs.readFile(requestFilename, "utf-8");
+  const request = JSON.parse(data) as Request;
+  if (request.command === "writecommands") {
+    const filename = request?.args?.filename as string | undefined;
+    if (filename) {
+      await handleWriteCommands(
+        vscode.Uri.parse(`vscode://tonka3000.raycast/writecommands?filename=${filename}`),
+        manager
+      );
+    }
+  }
+}
+
+let watcher: fs.FSWatcher;
+
 export function registerExternalHandlers(manager: ExtensionManager) {
   vscode.window.registerUriHandler({
     async handleUri(uri: vscode.Uri) {
@@ -149,5 +177,13 @@ export function registerExternalHandlers(manager: ExtensionManager) {
         await vscode.window.showErrorMessage(getErrorMessage(error));
       }
     },
+  });
+  const tsFolder = transitFolder(manager);
+  manager.logger.debug(`start watching ${tsFolder}`);
+  watcher = fs.watch(tsFolder, async (_, filename) => {
+    manager.logger.debug(`${filename} changed`);
+    if (filename === "request.json") {
+      await processRequest(path.join(tsFolder, filename), manager);
+    }
   });
 }
