@@ -32,7 +32,6 @@ export class ExtensionManager implements vscode.Disposable {
     vscode.window.onDidChangeWindowState((e) => {
       console.log(`focus: ${e.focused}`);
     });
-    console.log(this._context.globalStorageUri.fsPath);
   }
 
   private registerPackageJsonChanges() {

@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import path = require("path");
 import * as fs from "fs/promises";
 import { getErrorMessage } from "./utils";
+import { dirname, isAbsolute, resolve } from "path";
 
 interface CommandMetadata {
   command: string;
@@ -44,7 +45,7 @@ async function getCommands(): Promise<CommandMetadata[]> {
 }
 
 async function runCommand(cmdID: string) {
-  vscode.commands.executeCommand(cmdID);
+  await vscode.commands.executeCommand(cmdID);
 }
 
 async function writeCommands(manager: ExtensionManager) {
@@ -84,22 +85,68 @@ async function writeExtensions(manager: ExtensionManager) {
   manager.logger.debug("write succeeded");
 }
 
+async function handleWriteCommands(uri: vscode.Uri, manager: ExtensionManager) {
+  const params = new URLSearchParams(uri.query);
+  const filename = params.get("filename");
+  if (!filename) {
+    throw new Error("No filepath given");
+  }
+  if (!isAbsolute(filename)) {
+    throw new Error(`Filepath needs to be absolute, ${filename} is relative`);
+  }
+  const outputFilename = resolve(filename);
+  const outputFolder = dirname(outputFilename);
+  await fs.mkdir(outputFolder, { recursive: true });
+  const cmds = await getCommands();
+  manager.logger.debug(`write commands to ${outputFilename}`);
+  await fs.writeFile(outputFilename, JSON.stringify(cmds, null, 2));
+  manager.logger.debug("write succeeded");
+}
+
+async function handleRunCommand(uri: vscode.Uri, manager: ExtensionManager) {
+  const params = new URLSearchParams(uri.query);
+  const cmd = params.get("cmd");
+  if (!cmd) {
+    throw Error("Command ID is not provided");
+  }
+  for (const [key, value] of params.entries()) {
+    console.log(`${key} = ${value}`);
+  }
+  await runCommand(cmd);
+}
+
+async function handlePrintCommands(manager: ExtensionManager) {
+  const cmds = await getCommands();
+  const output = manager.logger.outputchannel;
+  if (!output) {
+    return;
+  }
+  output.appendLine("## VSCode Commands");
+  for (const cmd of cmds) {
+    output.appendLine(`- ${cmd.category ? cmd.category + ": " : ""}${cmd.title} (${cmd.command})`);
+  }
+  if (cmds && cmds.length > 0) {
+    output.appendLine(`\n${cmds.length} comannds found`);
+  } else {
+    output.appendLine("No command found");
+  }
+  output.show();
+}
+
 export function registerExternalHandlers(manager: ExtensionManager) {
   vscode.window.registerUriHandler({
     async handleUri(uri: vscode.Uri) {
       try {
-        if (uri.path === "/commands") {
-          writeCommands(manager);
+        if (uri.path === "/writecommands") {
+          await handleWriteCommands(uri, manager);
         } else if (uri.path === "/runcommand") {
-          const params = new URLSearchParams(uri.query);
-          const cmd = params.get("cmd");
-          if (!cmd) {
-            throw Error("Command ID is not provided");
-          }
-          await runCommand(cmd);
+          await handleRunCommand(uri, manager);
+        } else if (uri.path === "/printcommands") {
+          await handlePrintCommands(manager);
         }
       } catch (error) {
         manager.logger.error(getErrorMessage(error));
+        await vscode.window.showErrorMessage(getErrorMessage(error));
       }
     },
   });
