@@ -183,7 +183,11 @@ export function registerExternalHandlers(manager: ExtensionManager) {
   watcher = fs.watch(tsFolder, async (_, filename) => {
     manager.logger.debug(`${filename} changed`);
     if (filename === "request.json") {
-      await processRequest(path.join(tsFolder, filename), manager);
+      if (vscode.window.state.focused) {
+        await processRequest(path.join(tsFolder, filename), manager);
+      } else {
+        manager.logger.debug("Ignore changed file because window is not focused");
+      }
     }
   });
 }

@@ -29,9 +29,6 @@ export class ExtensionManager implements vscode.Disposable {
     this.registerPackageJsonChanges();
     this.registerCompletionProviders();
     registerExternalHandlers(this);
-    vscode.window.onDidChangeWindowState((e) => {
-      console.log(`focus: ${e.focused}`);
-    });
   }
 
   private registerPackageJsonChanges() {
