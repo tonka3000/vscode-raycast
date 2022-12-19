@@ -23,7 +23,7 @@ interface ExtensionMetadata {
 
 async function getCommands(): Promise<CommandMetadata[]> {
   const result: CommandMetadata[] = [];
-  const cmds = await vscode.commands.getCommands();
+  const cmds = await vscode.commands.getCommands(false);
   const exts = vscode.extensions.all;
   for (const ext of exts) {
     if (!ext.isActive) {
@@ -42,7 +42,21 @@ async function getCommands(): Promise<CommandMetadata[]> {
       }
     }
   }
-  return result;
+  const unresolvedCommandIDs: string[] = [];
+  const resolvedCommandIDS = result.map((c) => c.command);
+  cmds.forEach((c) => {
+    if (!resolvedCommandIDS.includes(c)) {
+      unresolvedCommandIDs.push(c);
+    }
+  });
+  const unresolvedCommads: CommandMetadata[] = unresolvedCommandIDs?.map((c) => {
+    return {
+      command: c,
+      title: c,
+    };
+  });
+  const all = [...result, ...unresolvedCommads];
+  return all;
 }
 
 async function runCommand(cmdID: string, manager: ExtensionManager) {
