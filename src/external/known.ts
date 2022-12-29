@@ -11,6 +11,26 @@ const knownCommandMetas: CommandMetadata[] = [
     title: "Focus on Terminal View",
     category: "Terminal",
   },
+  {
+    command: "workbench.action.reloadWindow",
+    title: "Reload Window",
+    category: "Developer",
+  },
+  {
+    command: "vscode.openFolder",
+    title: "Open Folder...",
+    category: "File",
+  },
+  {
+    command: "workbench.action.findInFiles",
+    title: "Find in Files",
+    category: "Search",
+  },
+  {
+    command: "workbench.extensions.search",
+    title: "Show Extensions",
+    category: "View",
+  },
 ];
 
 export function getFixedCommandMetaData(cmdid: string): CommandMetadata | undefined {
