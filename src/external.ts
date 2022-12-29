@@ -159,7 +159,10 @@ interface Request {
   args?: Record<string, any>;
 }
 
-async function processRequest(requestFilename: string, manager: ExtensionManager) {
+/**
+ * Process an incoming file request from disk
+ */
+async function processFileRequest(requestFilename: string, manager: ExtensionManager) {
   const data = await afs.readFile(requestFilename, "utf-8");
   const request = JSON.parse(data) as Request;
   if (request.command === "writecommands") {
@@ -170,6 +173,8 @@ async function processRequest(requestFilename: string, manager: ExtensionManager
         manager
       );
     }
+  } else {
+    manager.logger.debug(`Unknown request command '${request.command}'`);
   }
 }
 
@@ -195,13 +200,19 @@ export function registerExternalHandlers(manager: ExtensionManager) {
   const tsFolder = transitFolder(manager);
   manager.logger.debug(`start watching ${tsFolder}`);
   watcher = fs.watch(tsFolder, async (_, filename) => {
-    manager.logger.debug(`${filename} changed`);
-    if (filename === "request.json") {
-      if (vscode.window.state.focused) {
-        await processRequest(path.join(tsFolder, filename), manager);
-      } else {
-        manager.logger.debug("Ignore changed file because window is not focused");
+    try {
+      manager.logger.debug(`${filename} changed`);
+      if (filename === "request.json") {
+        if (vscode.window.state.focused) {
+          await processFileRequest(path.join(tsFolder, filename), manager);
+        } else {
+          manager.logger.debug("Ignore changed file because window is not focused");
+        }
       }
+    } catch (error) {
+      const msg = getErrorMessage(error);
+      manager.logger.error(msg);
+      await vscode.window.showErrorMessage(msg);
     }
   });
 }
