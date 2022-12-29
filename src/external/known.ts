@@ -6,6 +6,11 @@ const knownCommandMetas: CommandMetadata[] = [
     title: "Create New Terminal",
     category: "Terminal",
   },
+  {
+    command: "terminal.focus",
+    title: "Focus on Terminal View",
+    category: "Terminal",
+  },
 ];
 
 export function getFixedCommandMetaData(cmdid: string): CommandMetadata | undefined {
