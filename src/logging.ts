@@ -18,25 +18,25 @@ export class Logger implements vscode.Disposable {
   }
 
   public warning(text: string) {
-    if (this.level >= LogLevel.warning) {
+    if (this.level > LogLevel.none && this.level <= LogLevel.warning) {
       this._writeLine(text, "warning");
     }
   }
 
   public info(text: string) {
-    if (this.level >= LogLevel.info) {
+    if (this.level > LogLevel.none && this.level <= LogLevel.info) {
       this._writeLine(text, "info");
     }
   }
 
   public error(text: string) {
-    if (this.level >= LogLevel.error) {
+    if (this.level > LogLevel.none && this.level <= LogLevel.error) {
       this._writeLine(text, "error");
     }
   }
 
   public debug(text: string) {
-    if (this.level >= LogLevel.debug) {
+    if (this.level > LogLevel.none && this.level <= LogLevel.debug) {
       this._writeLine(text, "debug");
     }
   }
