@@ -1,7 +1,7 @@
 import path = require("path");
 import * as vscode from "vscode";
 import { getImageAssetsFromFolder } from "./assets";
-import { registerExternalHandlers } from "./external";
+import { registerExternalHandlers } from "./external/handler";
 import { Logger, LogLevel } from "./logging";
 import { readManifestFile } from "./manifest";
 import { RaycastTreeDataProvider } from "./tree";

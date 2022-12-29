@@ -1,95 +1,12 @@
-import { ExtensionManager } from "./manager";
+import { ExtensionManager } from "../manager";
 import * as vscode from "vscode";
 import path = require("path");
 import * as fs from "fs";
 import * as afs from "fs/promises";
-import { getErrorMessage } from "./utils";
+import { getErrorMessage } from "../utils";
 import { dirname, isAbsolute, resolve } from "path";
-
-interface CommandMetadata {
-  command: string;
-  title: string;
-  category?: string;
-}
-
-interface ExtensionMetadata {
-  id: string;
-  active: boolean;
-  version: string;
-  publisher: string;
-  displayName: string;
-  description?: string;
-}
-
-async function getCommands(): Promise<CommandMetadata[]> {
-  const result: CommandMetadata[] = [];
-  const cmds = await vscode.commands.getCommands(false);
-  const exts = vscode.extensions.all;
-  for (const ext of exts) {
-    if (!ext.isActive) {
-      continue;
-    }
-    const contr = ext.packageJSON.contributes;
-    if (contr) {
-      const cmdMetas = contr.commands as CommandMetadata[] | undefined;
-      if (!cmdMetas) {
-        continue;
-      }
-      for (const c of cmdMetas) {
-        if (cmds.includes(c.command)) {
-          result.push(c);
-        }
-      }
-    }
-  }
-  const unresolvedCommandIDs: string[] = [];
-  const resolvedCommandIDS = result.map((c) => c.command);
-  cmds.forEach((c) => {
-    if (!resolvedCommandIDS.includes(c)) {
-      unresolvedCommandIDs.push(c);
-    }
-  });
-  const unresolvedCommads: CommandMetadata[] = unresolvedCommandIDs?.map((c) => {
-    return {
-      command: c,
-      title: c,
-    };
-  });
-  const all = [...result, ...unresolvedCommads];
-  return all;
-}
-
-async function runCommand(cmdID: string, manager: ExtensionManager) {
-  manager.logger.debug(`Run command ${cmdID}`);
-  await vscode.commands.executeCommand(cmdID);
-}
-
-async function writeCommands(manager: ExtensionManager) {
-  const cmds = await getCommands();
-  const transitFolder = path.join(manager.context.globalStorageUri.fsPath, "transit");
-  const commandsFilename = path.join(transitFolder, "commands.json");
-  await afs.mkdir(transitFolder, { recursive: true });
-  manager.logger.debug(`write commands to ${commandsFilename}`);
-  await afs.writeFile(commandsFilename, JSON.stringify(cmds));
-  manager.logger.debug("write succeeded");
-  await writeExtensions(manager);
-}
-
-function getExtensions(): ExtensionMetadata[] {
-  const exts = vscode.extensions.all;
-  const result: ExtensionMetadata[] = [];
-  for (const e of exts) {
-    result.push({
-      id: e.id,
-      active: e.isActive,
-      version: e.packageJSON.version as string,
-      publisher: e.packageJSON.publisher as string,
-      displayName: e.packageJSON.displayName,
-      description: e.packageJSON.description,
-    });
-  }
-  return result;
-}
+import { getCommands, runCommand } from "./commands";
+import { getExtensions } from "./extensions";
 
 function transitFolder(manager: ExtensionManager): string {
   const result = path.join(manager.context.globalStorageUri.fsPath, "transit");
@@ -198,7 +115,7 @@ export function registerExternalHandlers(manager: ExtensionManager) {
     },
   });
   const tsFolder = transitFolder(manager);
-  manager.logger.debug(`start watching ${tsFolder}`);
+  manager.logger.debug(`start watching transit folder ${tsFolder}`);
   watcher = fs.watch(tsFolder, async (_, filename) => {
     try {
       manager.logger.debug(`${filename} changed`);
