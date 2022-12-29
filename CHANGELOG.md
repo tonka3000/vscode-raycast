@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.9
+
+- Add experimental URI protocol handler
+
 ## 0.8.1
 
 - Add `.svg` files as whitelisted asset extension
