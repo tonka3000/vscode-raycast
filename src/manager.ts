@@ -1,6 +1,7 @@
 import path = require("path");
 import * as vscode from "vscode";
 import { getImageAssetsFromFolder } from "./assets";
+import { registerExternalHandlers } from "./external/handler";
 import { Logger, LogLevel } from "./logging";
 import { readManifestFile } from "./manifest";
 import { RaycastTreeDataProvider } from "./tree";
@@ -27,6 +28,7 @@ export class ExtensionManager implements vscode.Disposable {
     );
     this.registerPackageJsonChanges();
     this.registerCompletionProviders();
+    registerExternalHandlers(this);
   }
 
   private registerPackageJsonChanges() {
@@ -178,6 +180,10 @@ export class ExtensionManager implements vscode.Disposable {
 
   get isRaycastEnabled(): boolean {
     return this._isRaycastEnabled;
+  }
+
+  get context(): vscode.ExtensionContext {
+    return this._context;
   }
 
   public runNpmExec(cmd: string[], terminalID?: string | undefined) {

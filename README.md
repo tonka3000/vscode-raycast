@@ -37,6 +37,28 @@ This is a [Raycast](https://raycast.com) extension for VSCode. This should help 
 
 You need to install the same requirements which are mention on [https://developers.raycast.com](https://developers.raycast.com/).
 
+## URI Handler Support
+
+🚧 Experimental
+
+You can run a command inside VSCode from outside of VSCode via custom URI handler.
+The URI handler can run commands with the following schema `vscode://tonka3000.raycast/runcommand?cmd=<cmdid>`.
+`cmdid` needs to be replaced by the internal command id of the specific VSCode command which you wanna trigger.
+
+E.g. you can run the command `Terminal: Create New Terminal` when you use it's internal ID `openInTerminal`.
+The full command would look like `vscode://tonka3000.raycast/runcommand?cmd=openInTerminal`.
+
+To run this example from the MacOS terminal you need to enter the following line into your terminal
+
+`open "vscode://tonka3000.raycast/runcommand?cmd=openInTerminal"`
+
+⚠️ Arguments for commands are right now not supported but planned for future releases.
+
+### Limitations
+
+Some commands of VSCode can not be run in a specific context, which is a limitation of VSCode itself.
+This can lead to errors.
+
 ## Troubleshooting
 
 If you have problems with the extension just file a issue on [GitHub](https://github.com/tonka3000/vscode-raycast/issues). It's mostly a good idea to attach the log output of this extension to the issue. You can active the logger by adding `"raycast.loglevel": "debug"` to your `settings.json` file. Just copy the content of the `Raycast` output pane into your GitHub issue.
