@@ -4,6 +4,7 @@ import { getImageAssetsFromFolder } from "./assets";
 import { registerExternalHandlers } from "./external/handler";
 import { Logger, LogLevel } from "./logging";
 import { readManifestFile } from "./manifest";
+import { getNPMRaycastAPIVersion } from "./npm";
 import { RaycastTreeDataProvider } from "./tree";
 import { getErrorMessage } from "./utils";
 
@@ -12,6 +13,8 @@ export class ExtensionManager implements vscode.Disposable {
   private _channel: vscode.OutputChannel;
   public logger: Logger = new Logger();
   private _isRaycastEnabled = false;
+  private _raycastAPINPMVersion: string | undefined;
+  public packageJSONRaycastapi: string | undefined;
   public treedataprovider: RaycastTreeDataProvider | undefined;
 
   constructor(public readonly extensionContext: vscode.ExtensionContext) {
@@ -29,6 +32,7 @@ export class ExtensionManager implements vscode.Disposable {
     this.registerPackageJsonChanges();
     this.registerCompletionProviders();
     registerExternalHandlers(this);
+    this.fetchRaycastVersionFromNPM();
   }
 
   private registerPackageJsonChanges() {
@@ -71,6 +75,29 @@ export class ExtensionManager implements vscode.Disposable {
     );
   }
 
+  get raycastAPINPMVersion(): string | undefined {
+    return this._raycastAPINPMVersion;
+  }
+
+  private set raycastAPINPMVersion(version: string | undefined) {
+    this.logger.debug(`set npm raycast API version to ${version}`);
+    this._raycastAPINPMVersion = version;
+    if (this.treedataprovider) {
+      this.logger.debug(`refresh treedataprovider`);
+      this.treedataprovider.refresh();
+    }
+  }
+
+  private async fetchRaycastVersionFromNPM(): Promise<void> {
+    try {
+      this.logger.debug("Fetch latest raycast API version from npm");
+      const version = await getNPMRaycastAPIVersion();
+      this.raycastAPINPMVersion = version;
+    } catch (error) {
+      // ignore error
+    }
+  }
+
   public async updateState(): Promise<void> {
     this.logger.level = this.getLogLevel();
     this.logger.debug("update state");
@@ -88,6 +115,7 @@ export class ExtensionManager implements vscode.Disposable {
         if (raycastapi) {
           isRaycastEnabled = true;
         }
+        this.packageJSONRaycastapi = raycastapi;
       }
     }
     this._isRaycastEnabled = isRaycastEnabled;
