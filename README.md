@@ -30,8 +30,9 @@ This is a [Raycast](https://raycast.com) extension for VSCode. This should help 
 - ✅ Builtin code snippet - just type raycast in a `.tsx` file
 - ✅ Open [Documentation](https://developers.raycast.com)
 - ✅ Search in [Documentation](https://developers.raycast.com)
-- ✅ Raycast Treeview for easy navigation
+- ✅ Raycast Tree-view for easy navigation
 - ✅ Auto Completion for script directives
+- ✅ Update the Raycast API via command (displayed in the tree-view as well)
 
 ## Requirements
 
