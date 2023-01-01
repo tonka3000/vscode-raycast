@@ -2,7 +2,7 @@
   "name": "raycast",
   "displayName": "Raycast",
   "description": "",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "engines": {
     "vscode": "^1.67.0"
   },
@@ -60,6 +60,11 @@
       {
         "command": "raycast.migration",
         "title": "Run Migration",
+        "category": "Raycast"
+      },
+      {
+        "command": "raycast.updateapi",
+        "title": "Update API",
         "category": "Raycast"
       },
       {
@@ -178,6 +183,10 @@
         },
         {
           "command": "raycast.migration",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.updateapi",
           "when": "raycast.workspaceEnabled"
         },
         {
@@ -369,6 +378,7 @@
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.21.0",
     "@vscode/test-electron": "^2.1.3",
+    "@types/semver": "^7.3.13",
     "eslint": "^8.14.0",
     "glob": "^8.0.1",
     "mocha": "^9.2.2",
@@ -389,6 +399,7 @@
   },
   "dependencies": {
     "edit-json-file": "^1.7.0",
-    "json-to-ast": "^2.1.0"
+    "json-to-ast": "^2.1.0",
+    "node-fetch": "^3.3.0"
   }
 }

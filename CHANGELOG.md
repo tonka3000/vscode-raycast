@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.10
+
+- Display possible update of the Raycast API in the tree
+
 ## 0.9
 
 - Add experimental URI protocol handler
