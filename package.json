@@ -63,6 +63,11 @@
         "category": "Raycast"
       },
       {
+        "command": "raycast.updateapi",
+        "title": "Update API",
+        "category": "Raycast"
+      },
+      {
         "command": "raycast.opendocs",
         "title": "Open Documentation",
         "category": "Raycast"
@@ -178,6 +183,10 @@
         },
         {
           "command": "raycast.migration",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.updateapi",
           "when": "raycast.workspaceEnabled"
         },
         {

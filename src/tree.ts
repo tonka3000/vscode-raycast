@@ -187,7 +187,7 @@ class UpdateTreeItem extends RaycastTreeItem {
     this.contextValue = "update";
     this.iconPath = new vscode.ThemeIcon("broadcast");
     this.command = {
-      command: "raycast.migration",
+      command: "raycast.updateapi",
       title: "",
       arguments: [this],
     };

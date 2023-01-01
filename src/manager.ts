@@ -41,7 +41,9 @@ export class ExtensionManager implements vscode.Disposable {
       if (pkgjson) {
         const found = filenames.find((f) => f === pkgjson);
         if (found) {
+          this.logger.debug("package.json changed");
           this.updateState();
+          this.refreshTree();
         }
       }
     };
@@ -61,6 +63,14 @@ export class ExtensionManager implements vscode.Disposable {
       })
     );
     this._context.subscriptions.push(
+      vscode.workspace.onDidChangeTextDocument((e) => {
+        const pkgjson = this.getActiveWorkspacePackageFilename();
+        if (e.document.fileName === pkgjson) {
+          triggerUpdateOnChange([e.document.fileName]);
+        }
+      })
+    );
+    this._context.subscriptions.push(
       vscode.workspace.onDidDeleteFiles((e) => {
         triggerUpdateOnChange(e.files.map((f) => f.fsPath));
       })
@@ -70,6 +80,7 @@ export class ExtensionManager implements vscode.Disposable {
         const pkgjson = this.getActiveWorkspacePackageFilename();
         if (pkgjson && pkgjson === e.fileName) {
           this.updateState();
+          this.refreshTree();
         }
       })
     );
@@ -101,7 +112,14 @@ export class ExtensionManager implements vscode.Disposable {
   public async updateState(): Promise<void> {
     this.logger.level = this.getLogLevel();
     this.logger.debug("update state");
+    await this.fetchRaycastVersionFromNPM();
     await this.updateContext();
+  }
+
+  public refreshTree() {
+    if (this.treedataprovider) {
+      this.treedataprovider.refresh();
+    }
   }
 
   public async updateContext(): Promise<void> {
@@ -226,6 +244,13 @@ export class ExtensionManager implements vscode.Disposable {
     term.sendText("clear");
     term.show();
     term.sendText(`npx exec ${cmd.join(" ")}`);
+  }
+
+  public runNpm(cmd: string[], terminalID?: string | undefined) {
+    const term = this.getTerminal(terminalID);
+    term.sendText("clear");
+    term.show();
+    term.sendText(`npm ${cmd.join(" ")}`);
   }
 
   public getActiveWorkspace(): vscode.WorkspaceFolder | undefined {
