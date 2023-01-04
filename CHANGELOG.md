@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.9.1
+
+- Fix crash if `transit` folder does not exist
+
 ## 0.9
 
 - Add experimental URI protocol handler
