@@ -1,4 +1,5 @@
 import fetch from "node-fetch";
+import { ExtensionManager } from "./manager";
 
 interface NPMDistTags {
   latest?: string;
@@ -10,9 +11,13 @@ interface NPMResponse {
   "dist-tags": NPMDistTags;
 }
 
-export async function fetchRaycastAPIVersionFromNPM(): Promise<string | undefined> {
+export async function fetchVersionFromNPMPackage(
+  manager: ExtensionManager,
+  packageName: string
+): Promise<string | undefined> {
   try {
-    const res = await fetch("https://registry.npmjs.org/@raycast/api");
+    manager.logger.debug(`Fetch NPM package information for '${packageName}'`);
+    const res = await fetch(`https://registry.npmjs.org/${packageName}`);
     const j = (await res.json()) as NPMResponse;
     const version = j["dist-tags"]?.latest;
     if (version && version.length > 0) {
@@ -21,13 +26,4 @@ export async function fetchRaycastAPIVersionFromNPM(): Promise<string | undefine
   } catch (error) {
     // ignore
   }
-}
-
-let raycastAPINPMVersion: string | undefined;
-
-export async function getNPMRaycastAPIVersion(): Promise<string | undefined> {
-  if (!raycastAPINPMVersion || raycastAPINPMVersion.length <= 0) {
-    raycastAPINPMVersion = await fetchRaycastAPIVersionFromNPM();
-  }
-  return raycastAPINPMVersion;
 }
