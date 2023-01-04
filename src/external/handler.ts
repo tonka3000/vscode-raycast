@@ -3,7 +3,7 @@ import * as vscode from "vscode";
 import path = require("path");
 import * as fs from "fs";
 import * as afs from "fs/promises";
-import { getErrorMessage } from "../utils";
+import { fileExists, fileExistsSync, getErrorMessage } from "../utils";
 import { dirname, isAbsolute, resolve } from "path";
 import { getCommands, runCommand } from "./commands";
 import { getExtensions } from "./extensions";
@@ -116,6 +116,9 @@ export function registerExternalHandlers(manager: ExtensionManager) {
   });
   const tsFolder = transitFolder(manager);
   manager.logger.debug(`start watching transit folder ${tsFolder}`);
+  if (!fileExistsSync(tsFolder)) {
+    fs.mkdirSync(tsFolder, { recursive: true });
+  }
   watcher = fs.watch(tsFolder, async (_, filename) => {
     try {
       manager.logger.debug(`${filename} changed`);
