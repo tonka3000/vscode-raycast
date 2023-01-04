@@ -2,7 +2,14 @@
 
 > <span style="color:red; font-weight:bold;">This is NOT an official tool by Raycast company!!</span>
 
-This is a [Raycast](https://raycast.com) extension for VSCode. This should help you to develop [Raycast](https://raycast.com) extensions.
+The extension should help you to develop [Raycast](https://raycast.com) extensions by providing
+
+- Commands for common tasks
+- Debugging
+- Auto-Completion
+- Snippets
+
+and more
 
 ## Features
 
