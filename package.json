@@ -30,6 +30,7 @@
     "onCommand:raycast.goto.command",
     "onCommand:raycast.goto.command.mode",
     "onCommand:raycast.goto.command.interval",
+    "onCommand:raycast.updateinternalstate",
     "onCommand:raycast.opencommand",
     "onView:raycast",
     "workspaceContains:package.json"
@@ -63,8 +64,8 @@
         "category": "Raycast"
       },
       {
-        "command": "raycast.updateapi",
-        "title": "Update API",
+        "command": "raycast.updateinternalstate",
+        "title": "Update State of VSCode Extension",
         "category": "Raycast"
       },
       {
@@ -186,8 +187,7 @@
           "when": "raycast.workspaceEnabled"
         },
         {
-          "command": "raycast.updateapi",
-          "when": "raycast.workspaceEnabled"
+          "command": "raycast.updateinternalstate"
         },
         {
           "command": "raycast.addcommand",
