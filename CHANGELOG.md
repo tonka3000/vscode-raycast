@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.10
+
+- Display possible migration of the Raycast API in the tree
+
 ## 0.9.1
 
 - Fix crash if `transit` folder does not exist

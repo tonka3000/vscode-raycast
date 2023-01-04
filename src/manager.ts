@@ -4,6 +4,7 @@ import { getImageAssetsFromFolder } from "./assets";
 import { registerExternalHandlers } from "./external/handler";
 import { Logger, LogLevel } from "./logging";
 import { readManifestFile } from "./manifest";
+import { fetchVersionFromNPMPackage } from "./npm";
 import { RaycastTreeDataProvider } from "./tree";
 import { getErrorMessage } from "./utils";
 
@@ -12,6 +13,9 @@ export class ExtensionManager implements vscode.Disposable {
   private _channel: vscode.OutputChannel;
   public logger: Logger = new Logger();
   private _isRaycastEnabled = false;
+  private _raycastAPINPMVersion: string | undefined;
+  private _raycastLatestRaycastMigrationVersion: string | undefined;
+  public packageJSONRaycastapi: string | undefined;
   public treedataprovider: RaycastTreeDataProvider | undefined;
 
   constructor(public readonly extensionContext: vscode.ExtensionContext) {
@@ -29,6 +33,7 @@ export class ExtensionManager implements vscode.Disposable {
     this.registerPackageJsonChanges();
     this.registerCompletionProviders();
     registerExternalHandlers(this);
+    this.fetchRaycastVersionFromNPM();
   }
 
   private registerPackageJsonChanges() {
@@ -37,7 +42,9 @@ export class ExtensionManager implements vscode.Disposable {
       if (pkgjson) {
         const found = filenames.find((f) => f === pkgjson);
         if (found) {
+          this.logger.debug("package.json changed");
           this.updateState();
+          this.refreshTree();
         }
       }
     };
@@ -57,6 +64,14 @@ export class ExtensionManager implements vscode.Disposable {
       })
     );
     this._context.subscriptions.push(
+      vscode.workspace.onDidChangeTextDocument((e) => {
+        const pkgjson = this.getActiveWorkspacePackageFilename();
+        if (e.document.fileName === pkgjson) {
+          triggerUpdateOnChange([e.document.fileName]);
+        }
+      })
+    );
+    this._context.subscriptions.push(
       vscode.workspace.onDidDeleteFiles((e) => {
         triggerUpdateOnChange(e.files.map((f) => f.fsPath));
       })
@@ -66,15 +81,66 @@ export class ExtensionManager implements vscode.Disposable {
         const pkgjson = this.getActiveWorkspacePackageFilename();
         if (pkgjson && pkgjson === e.fileName) {
           this.updateState();
+          this.refreshTree();
         }
       })
     );
+  }
+
+  get raycastAPINPMVersion(): string | undefined {
+    return this._raycastAPINPMVersion;
+  }
+
+  private set raycastAPINPMVersion(version: string | undefined) {
+    this.logger.debug(`set npm raycast API version to ${version}`);
+    this._raycastAPINPMVersion = version;
+    if (this.treedataprovider) {
+      this.logger.debug(`refresh treedataprovider`);
+    }
+  }
+
+  get raycastLatestMigrationVersionFromNPM(): string | undefined {
+    return this._raycastLatestRaycastMigrationVersion;
+  }
+
+  private set raycastLatestMigrationVersionFromNPM(version: string | undefined) {
+    this.logger.debug(`set latest npm raycast migration version to ${version}`);
+    this._raycastLatestRaycastMigrationVersion = version;
+    if (this.treedataprovider) {
+      this.logger.debug(`refresh treedataprovider`);
+    }
+  }
+
+  private async fetchRaycastVersionFromNPM(): Promise<void> {
+    try {
+      this.logger.debug("Fetch latest raycast migration version from npm");
+      const migrationPackageName = "@raycast/migration";
+      const version = await fetchVersionFromNPMPackage(this, migrationPackageName);
+      if (!version) {
+        this.logger.warning(`Got no version information about ${migrationPackageName} from npm`);
+        return;
+      }
+      this.logger.debug(`Got version ${version} from npm for ${migrationPackageName}`);
+      const versionChanged = version !== this.raycastLatestMigrationVersionFromNPM;
+      this.raycastLatestMigrationVersionFromNPM = version;
+      if (versionChanged) {
+        this.refreshTree();
+      }
+    } catch (error) {
+      // ignore error
+    }
   }
 
   public async updateState(): Promise<void> {
     this.logger.level = this.getLogLevel();
     this.logger.debug("update state");
     await this.updateContext();
+  }
+
+  public refreshTree() {
+    if (this.treedataprovider) {
+      this.treedataprovider.refresh();
+    }
   }
 
   public async updateContext(): Promise<void> {
@@ -88,6 +154,7 @@ export class ExtensionManager implements vscode.Disposable {
         if (raycastapi) {
           isRaycastEnabled = true;
         }
+        this.packageJSONRaycastapi = raycastapi;
       }
     }
     this._isRaycastEnabled = isRaycastEnabled;
@@ -187,17 +254,23 @@ export class ExtensionManager implements vscode.Disposable {
   }
 
   public runNpmExec(cmd: string[], terminalID?: string | undefined) {
-    const term = this.getTerminal(terminalID);
-    term.sendText("clear");
-    term.show();
-    term.sendText(`npm exec ${cmd.join(" ")}`);
+    this.runInTerminal(["npm", "exec", ...cmd], terminalID);
   }
 
   public runNpx(cmd: string[], terminalID?: string | undefined) {
+    this.runInTerminal(["npx", "exec", ...cmd], terminalID);
+  }
+
+  public runNpm(cmd: string[], terminalID?: string | undefined) {
+    this.runInTerminal(["npm", ...cmd], terminalID);
+  }
+
+  public runInTerminal(cmd: string[], terminalID?: string | undefined) {
     const term = this.getTerminal(terminalID);
     term.sendText("clear");
     term.show();
-    term.sendText(`npx exec ${cmd.join(" ")}`);
+    const quotedCmd = cmd.map((c) => (c.includes(" ") ? `"${c}"` : c));
+    term.sendText(`${quotedCmd.join(" ")}`);
   }
 
   public getActiveWorkspace(): vscode.WorkspaceFolder | undefined {

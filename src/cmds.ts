@@ -21,6 +21,7 @@ import { gotoCommandIntervalManifestLocationCmd } from "./commands/goto/interval
 import { openCommandCmd } from "./commands/opencommand";
 import { gotoCommandArgumentManifestLocationCmd } from "./commands/goto/argument";
 import { addCommandArgumentCmd } from "./commands/addCommandArgument";
+import { updateInternalState } from "./commands/updateInternalState";
 
 export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("lint", async () => lintCmd(manager));
@@ -28,6 +29,7 @@ export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("build", async () => buildCmd(manager));
   manager.registerCommand("rundev", async () => runDevCmd(manager));
   manager.registerCommand("migration", async () => runMigrationCmd(manager));
+  manager.registerCommand("updateinternalstate", async () => updateInternalState(manager));
   manager.registerCommand("opendocs", async () => openDocsCmd(manager));
   manager.registerCommand("opencommand", async (...args: any[]) => openCommandCmd(manager, args));
   manager.registerCommand("searchdocs", async () => searchDocsCmd(manager));

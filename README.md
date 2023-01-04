@@ -2,7 +2,14 @@
 
 > <span style="color:red; font-weight:bold;">This is NOT an official tool by Raycast company!!</span>
 
-This is a [Raycast](https://raycast.com) extension for VSCode. This should help you to develop [Raycast](https://raycast.com) extensions.
+The extension should help you to develop [Raycast](https://raycast.com) extensions by providing
+
+- Commands for common tasks
+- Debugging
+- Auto-Completion
+- Snippets
+
+and more
 
 ## Features
 
@@ -10,7 +17,7 @@ This is a [Raycast](https://raycast.com) extension for VSCode. This should help 
 - ✅ Run fix-lint process
 - ✅ Run build process
 - ✅ Run develop mode
-- ✅ Run migration
+- ✅ Run migration (also available in the tree-view)
 - ✅ Login
 - ✅ Publish extensions
 - ✅ `Attach Debugger` command
@@ -30,7 +37,7 @@ This is a [Raycast](https://raycast.com) extension for VSCode. This should help 
 - ✅ Builtin code snippet - just type raycast in a `.tsx` file
 - ✅ Open [Documentation](https://developers.raycast.com)
 - ✅ Search in [Documentation](https://developers.raycast.com)
-- ✅ Raycast Treeview for easy navigation
+- ✅ Raycast Tree-view for easy navigation
 - ✅ Auto Completion for script directives
 
 ## Requirements

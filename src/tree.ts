@@ -3,6 +3,28 @@ import * as vscode from "vscode";
 import { ExtensionManager } from "./manager";
 import { Argument, Command, Manifest, Preference, readManifestFileSync } from "./manifest";
 import { fileExistsSync, getModTimeSync } from "./utils";
+import * as semver from "semver";
+
+function reduceToVersion(sem: string): string {
+  let result = "";
+  for (const c of sem) {
+    if (c.match(/[0-9.]/)) {
+      result += c;
+    }
+  }
+  return result;
+}
+
+function toMinorVersion(text: string, shortRepresentation: boolean = false): string {
+  const splits = text.split(".").slice(0, 2);
+  if (!shortRepresentation) {
+    const missing = 3 - splits.length;
+    for (let i = 0; i < missing; i++) {
+      splits.push("0");
+    }
+  }
+  return splits.join(".");
+}
 
 export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastTreeItem> {
   private manifest: Manifest | undefined;
@@ -23,10 +45,25 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
       return Promise.resolve([]);
     }
     if (element === undefined) {
-      return Promise.resolve([
-        new CommandsTreeItem(vscode.TreeItemCollapsibleState.Expanded),
-        new PreferencesTreeItem(vscode.TreeItemCollapsibleState.Collapsed),
-      ]);
+      const items: RaycastTreeItem[] = [];
+      const latestMigration = this.manager.raycastLatestMigrationVersionFromNPM;
+      const localVersion = this.manager.packageJSONRaycastapi;
+      const migrateAvailable = this.isRaycastAPIUpdateAvailable(latestMigration, this.manager.packageJSONRaycastapi);
+      if (migrateAvailable) {
+        items.push(
+          new MigrateTreeItem(
+            latestMigration ? toMinorVersion(latestMigration, true) : "?",
+            localVersion ? reduceToVersion(localVersion) : "?"
+          )
+        );
+      }
+      items.push(
+        ...[
+          new CommandsTreeItem(vscode.TreeItemCollapsibleState.Expanded),
+          new PreferencesTreeItem(vscode.TreeItemCollapsibleState.Collapsed),
+        ]
+      );
+      return Promise.resolve(items);
     } else {
       const mani = this.getManifest();
       if (element instanceof CommandsTreeItem) {
@@ -91,6 +128,26 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
     return Promise.resolve([]);
   }
 
+  private isRaycastAPIUpdateAvailable(
+    raycastNPMVersion: string | undefined,
+    packageJSONVersion: string | undefined
+  ): boolean {
+    try {
+      if (!raycastNPMVersion || !packageJSONVersion) {
+        return false;
+      }
+      const minorPackageJSON = toMinorVersion(reduceToVersion(packageJSONVersion));
+      const minorNPM = toMinorVersion(raycastNPMVersion);
+      this.manager.logger.debug(
+        `raycast npm Version: ${raycastNPMVersion}, package.json version: ${packageJSONVersion}`
+      );
+      this.manager.logger.debug(`minor version => npm: ${minorNPM}, package.json: ${minorPackageJSON}`);
+      return semver.gt(minorNPM, minorPackageJSON);
+    } catch (error) {
+      return false;
+    }
+  }
+
   private getManifest(): Manifest | undefined {
     try {
       const ws = this.manager.getActiveWorkspace();
@@ -128,6 +185,20 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
 export class RaycastTreeItem extends vscode.TreeItem {
   constructor(public label?: string, public readonly collapsibleState?: vscode.TreeItemCollapsibleState) {
     super(label || "", collapsibleState);
+  }
+}
+
+class MigrateTreeItem extends RaycastTreeItem {
+  constructor(npmVersion: string, localVersion: string) {
+    super(`Migrate to ${npmVersion}`);
+    this.contextValue = "migrate";
+    this.tooltip = `Migrate from ${localVersion} to ${npmVersion}`;
+    this.iconPath = new vscode.ThemeIcon("broadcast");
+    this.command = {
+      command: "raycast.migration",
+      title: "",
+      arguments: [this],
+    };
   }
 }
 
