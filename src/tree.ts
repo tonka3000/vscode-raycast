@@ -47,9 +47,15 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
     if (element === undefined) {
       const items: RaycastTreeItem[] = [];
       const latestMigration = this.manager.raycastLatestMigrationVersionFromNPM;
+      const localVersion = this.manager.packageJSONRaycastapi;
       const migrateAvailable = this.isRaycastAPIUpdateAvailable(latestMigration, this.manager.packageJSONRaycastapi);
       if (migrateAvailable) {
-        items.push(new MigrateTreeItem(latestMigration ? toMinorVersion(latestMigration, true) : "?"));
+        items.push(
+          new MigrateTreeItem(
+            latestMigration ? toMinorVersion(latestMigration, true) : "?",
+            localVersion ? reduceToVersion(localVersion) : "?"
+          )
+        );
       }
       items.push(
         ...[
@@ -183,9 +189,10 @@ export class RaycastTreeItem extends vscode.TreeItem {
 }
 
 class MigrateTreeItem extends RaycastTreeItem {
-  constructor(npmVersion: string) {
+  constructor(npmVersion: string, localVersion: string) {
     super(`Migrate to ${npmVersion}`);
     this.contextValue = "migrate";
+    this.tooltip = `Migrate from ${localVersion} to ${npmVersion}`;
     this.iconPath = new vscode.ThemeIcon("broadcast");
     this.command = {
       command: "raycast.migration",
