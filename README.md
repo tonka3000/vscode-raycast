@@ -10,7 +10,7 @@ This is a [Raycast](https://raycast.com) extension for VSCode. This should help 
 - ✅ Run fix-lint process
 - ✅ Run build process
 - ✅ Run develop mode
-- ✅ Run migration
+- ✅ Run migration (also available in the tree-view)
 - ✅ Login
 - ✅ Publish extensions
 - ✅ `Attach Debugger` command
