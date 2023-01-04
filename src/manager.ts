@@ -4,7 +4,7 @@ import { getImageAssetsFromFolder } from "./assets";
 import { registerExternalHandlers } from "./external/handler";
 import { Logger, LogLevel } from "./logging";
 import { readManifestFile } from "./manifest";
-import { getNPMRaycastMigrationVersion } from "./npm";
+import { fetchVersionFromNPMPackage } from "./npm";
 import { RaycastTreeDataProvider } from "./tree";
 import { getErrorMessage } from "./utils";
 
@@ -114,7 +114,13 @@ export class ExtensionManager implements vscode.Disposable {
   private async fetchRaycastVersionFromNPM(): Promise<void> {
     try {
       this.logger.debug("Fetch latest raycast migration version from npm");
-      const version = await getNPMRaycastMigrationVersion();
+      const migrationPackageName = "@raycast/migration";
+      const version = await fetchVersionFromNPMPackage(this, migrationPackageName);
+      if (!version) {
+        this.logger.warning(`Got no version information about ${migrationPackageName} from npm`);
+        return;
+      }
+      this.logger.debug(`Got version ${version} from npm for ${migrationPackageName}`);
       const versionChanged = version !== this.raycastLatestMigrationVersionFromNPM;
       this.raycastLatestMigrationVersionFromNPM = version;
       if (versionChanged) {
@@ -174,7 +180,7 @@ export class ExtensionManager implements vscode.Disposable {
       this.logger.debug(`setContext ${key} to ${value}`);
       await vscode.commands.executeCommand("setContext", key, value);
       this.logger.debug("setContent succeeded");
-    } catch (error) { }
+    } catch (error) {}
   }
 
   public registerCommand(command: string, callback: (args: any[]) => any, thisArg?: any): vscode.Disposable {
@@ -365,5 +371,5 @@ export class ExtensionManager implements vscode.Disposable {
     await this.setContext("raycast.extensionLoaded", true);
   }
 
-  public dispose() { }
+  public dispose() {}
 }
