@@ -15,6 +15,17 @@ function reduceToVersion(sem: string): string {
   return result;
 }
 
+function toMinorVersion(text: string, shortRepresentation: boolean = false): string {
+  const splits = text.split(".").slice(0, 2);
+  if (!shortRepresentation) {
+    const missing = 3 - splits.length;
+    for (let i = 0; i < missing; i++) {
+      splits.push("0");
+    }
+  }
+  return splits.join(".");
+}
+
 export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastTreeItem> {
   private manifest: Manifest | undefined;
   private manifestLastModTime: Date | undefined;
@@ -35,12 +46,10 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
     }
     if (element === undefined) {
       const items: RaycastTreeItem[] = [];
-      const updateAvailable = this.isRaycastAPIUpdateAvailable(
-        this.manager.raycastAPINPMVersion,
-        this.manager.packageJSONRaycastapi
-      );
-      if (updateAvailable) {
-        items.push(new UpdateTreeItem(this.manager.raycastAPINPMVersion || "?"));
+      const latestMigration = this.manager.raycastLatestMigrationVersionFromNPM;
+      const migrateAvailable = this.isRaycastAPIUpdateAvailable(latestMigration, this.manager.packageJSONRaycastapi);
+      if (migrateAvailable) {
+        items.push(new MigrateTreeItem(latestMigration ? toMinorVersion(latestMigration, true) : "?"));
       }
       items.push(
         ...[
@@ -121,16 +130,8 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
       if (!raycastNPMVersion || !packageJSONVersion) {
         return false;
       }
-      const toMinor = (text: string) => {
-        const splits = text.split(".").slice(0, 2);
-        const missing = 3 - splits.length;
-        for (let i = 0; i < missing; i++) {
-          splits.push("0");
-        }
-        return splits.join(".");
-      };
-      const minorPackageJSON = toMinor(reduceToVersion(packageJSONVersion));
-      const minorNPM = toMinor(raycastNPMVersion);
+      const minorPackageJSON = toMinorVersion(reduceToVersion(packageJSONVersion));
+      const minorNPM = toMinorVersion(raycastNPMVersion);
       this.manager.logger.debug(
         `raycast npm Version: ${raycastNPMVersion}, package.json version: ${packageJSONVersion}`
       );
@@ -181,13 +182,13 @@ export class RaycastTreeItem extends vscode.TreeItem {
   }
 }
 
-class UpdateTreeItem extends RaycastTreeItem {
+class MigrateTreeItem extends RaycastTreeItem {
   constructor(npmVersion: string) {
-    super(`Update to ${npmVersion}`);
-    this.contextValue = "update";
+    super(`Migrate to ${npmVersion}`);
+    this.contextValue = "migrate";
     this.iconPath = new vscode.ThemeIcon("broadcast");
     this.command = {
-      command: "raycast.updateapi",
+      command: "raycast.migration",
       title: "",
       arguments: [this],
     };

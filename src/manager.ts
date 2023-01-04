@@ -4,7 +4,7 @@ import { getImageAssetsFromFolder } from "./assets";
 import { registerExternalHandlers } from "./external/handler";
 import { Logger, LogLevel } from "./logging";
 import { readManifestFile } from "./manifest";
-import { getNPMRaycastAPIVersion } from "./npm";
+import { getNPMRaycastMigrationVersion } from "./npm";
 import { RaycastTreeDataProvider } from "./tree";
 import { getErrorMessage } from "./utils";
 
@@ -14,6 +14,7 @@ export class ExtensionManager implements vscode.Disposable {
   public logger: Logger = new Logger();
   private _isRaycastEnabled = false;
   private _raycastAPINPMVersion: string | undefined;
+  private _raycastLatestRaycastMigrationVersion: string | undefined;
   public packageJSONRaycastapi: string | undefined;
   public treedataprovider: RaycastTreeDataProvider | undefined;
 
@@ -95,15 +96,30 @@ export class ExtensionManager implements vscode.Disposable {
     this._raycastAPINPMVersion = version;
     if (this.treedataprovider) {
       this.logger.debug(`refresh treedataprovider`);
-      this.treedataprovider.refresh();
+    }
+  }
+
+  get raycastLatestMigrationVersionFromNPM(): string | undefined {
+    return this._raycastLatestRaycastMigrationVersion;
+  }
+
+  private set raycastLatestMigrationVersionFromNPM(version: string | undefined) {
+    this.logger.debug(`set latest npm raycast migration version to ${version}`);
+    this._raycastLatestRaycastMigrationVersion = version;
+    if (this.treedataprovider) {
+      this.logger.debug(`refresh treedataprovider`);
     }
   }
 
   private async fetchRaycastVersionFromNPM(): Promise<void> {
     try {
-      this.logger.debug("Fetch latest raycast API version from npm");
-      const version = await getNPMRaycastAPIVersion();
-      this.raycastAPINPMVersion = version;
+      this.logger.debug("Fetch latest raycast migration version from npm");
+      const version = await getNPMRaycastMigrationVersion();
+      const versionChanged = version !== this.raycastLatestMigrationVersionFromNPM;
+      this.raycastLatestMigrationVersionFromNPM = version;
+      if (versionChanged) {
+        this.refreshTree();
+      }
     } catch (error) {
       // ignore error
     }
@@ -112,7 +128,6 @@ export class ExtensionManager implements vscode.Disposable {
   public async updateState(): Promise<void> {
     this.logger.level = this.getLogLevel();
     this.logger.debug("update state");
-    await this.fetchRaycastVersionFromNPM();
     await this.updateContext();
   }
 
@@ -159,7 +174,7 @@ export class ExtensionManager implements vscode.Disposable {
       this.logger.debug(`setContext ${key} to ${value}`);
       await vscode.commands.executeCommand("setContext", key, value);
       this.logger.debug("setContent succeeded");
-    } catch (error) {}
+    } catch (error) { }
   }
 
   public registerCommand(command: string, callback: (args: any[]) => any, thisArg?: any): vscode.Disposable {
@@ -233,24 +248,23 @@ export class ExtensionManager implements vscode.Disposable {
   }
 
   public runNpmExec(cmd: string[], terminalID?: string | undefined) {
-    const term = this.getTerminal(terminalID);
-    term.sendText("clear");
-    term.show();
-    term.sendText(`npm exec ${cmd.join(" ")}`);
+    this.runInTerminal(["npm", "exec", ...cmd], terminalID);
   }
 
   public runNpx(cmd: string[], terminalID?: string | undefined) {
-    const term = this.getTerminal(terminalID);
-    term.sendText("clear");
-    term.show();
-    term.sendText(`npx exec ${cmd.join(" ")}`);
+    this.runInTerminal(["npx", "exec", ...cmd], terminalID);
   }
 
   public runNpm(cmd: string[], terminalID?: string | undefined) {
+    this.runInTerminal(["npm", ...cmd], terminalID);
+  }
+
+  public runInTerminal(cmd: string[], terminalID?: string | undefined) {
     const term = this.getTerminal(terminalID);
     term.sendText("clear");
     term.show();
-    term.sendText(`npm ${cmd.join(" ")}`);
+    const quotedCmd = cmd.map((c) => (c.includes(" ") ? `"${c}"` : c));
+    term.sendText(`${quotedCmd.join(" ")}`);
   }
 
   public getActiveWorkspace(): vscode.WorkspaceFolder | undefined {
@@ -351,5 +365,5 @@ export class ExtensionManager implements vscode.Disposable {
     await this.setContext("raycast.extensionLoaded", true);
   }
 
-  public dispose() {}
+  public dispose() { }
 }
