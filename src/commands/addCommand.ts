@@ -156,7 +156,7 @@ async function askInterval(cmd: Command): Promise<string | undefined> {
 async function askDisabledByDefault(cmd: Command): Promise<string | undefined> {
   const result = await vscode.window.showQuickPick(["Yes", "No"], {
     placeHolder: "Should the command be visible after the initial installation",
-    title: "Command Activated after initial Install",
+    title: "Command visible after initial Install?",
   });
   if (result !== undefined) {
     if (result === "No") {
