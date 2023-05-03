@@ -153,6 +153,21 @@ async function askInterval(cmd: Command): Promise<string | undefined> {
   }
 }
 
+async function askDisabledByDefault(cmd: Command): Promise<string | undefined> {
+  const result = await vscode.window.showQuickPick(["Yes", "No"], {
+    placeHolder: "Should the command be visible after the initial installation",
+    title: "Command Activated after initial Install",
+  });
+  if (result !== undefined) {
+    if (result === "No") {
+      cmd.disabledByDefault = true;
+    }
+    return result;
+  } else {
+    return undefined;
+  }
+}
+
 export async function addCommandCmd(manager: ExtensionManager) {
   manager.logger.debug("add command to package.json");
   const ws = manager.getActiveWorkspace();
@@ -183,6 +198,9 @@ export async function addCommandCmd(manager: ExtensionManager) {
           if ((await askInterval(cmd)) === undefined) {
             return;
           }
+        }
+        if ((await askDisabledByDefault(cmd)) === undefined) {
+          return;
         }
 
         const srcFolder = path.join(ws.uri.fsPath, "src");
