@@ -22,6 +22,7 @@ export interface Command {
   preferences?: Preference[];
   arguments?: Argument[];
   interval?: string;
+  disabledByDefault?: boolean;
 }
 
 export interface PreferenceData {

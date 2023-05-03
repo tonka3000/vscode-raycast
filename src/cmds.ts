@@ -22,6 +22,7 @@ import { openCommandCmd } from "./commands/opencommand";
 import { gotoCommandArgumentManifestLocationCmd } from "./commands/goto/argument";
 import { addCommandArgumentCmd } from "./commands/addCommandArgument";
 import { updateInternalState } from "./commands/updateInternalState";
+import { gotoCommandDisabledByDefaultManifestLocationCmd } from "./commands/goto/disabledByDefault";
 
 export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("lint", async () => lintCmd(manager));
@@ -47,6 +48,9 @@ export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("goto.command", async (...args: any[]) => gotoCommandManifestLocationCmd(manager, args));
   manager.registerCommand("goto.command.mode", async (...args: any[]) =>
     gotoCommandModeManifestLocationCmd(manager, args)
+  );
+  manager.registerCommand("goto.command.disabledbydefault", async (...args: any[]) =>
+    gotoCommandDisabledByDefaultManifestLocationCmd(manager, args)
   );
   manager.registerCommand("goto.command.interval", async (...args: any[]) =>
     gotoCommandIntervalManifestLocationCmd(manager, args)

@@ -114,6 +114,10 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
             element.cmd
           )
         );
+        const disabledByDefault = element.cmd?.disabledByDefault || false;
+        if (disabledByDefault) {
+          children.push(new DisabledByDefaultTreeItem(element.cmd));
+        }
         return Promise.resolve(children);
       } else if (element instanceof ArgumentsTreeItem) {
         const cmd = element.cmd;
@@ -249,6 +253,21 @@ export class ArgumentsTreeItem extends RaycastTreeItem {
     super("Arguments", collapsibleState);
     this.contextValue = "command-arguments";
     this.iconPath = new vscode.ThemeIcon("symbol-parameter");
+  }
+}
+
+export class DisabledByDefaultTreeItem extends RaycastTreeItem {
+  constructor(public readonly cmd: Command) {
+    super("Disabled by Default", vscode.TreeItemCollapsibleState.None);
+    this.description = "";
+    this.tooltip = "Command is disabled after initial install";
+    this.iconPath = new vscode.ThemeIcon("primitive-square");
+    this.contextValue = "disabledbydefault";
+    this.command = {
+      command: "raycast.goto.command.disabledbydefault",
+      title: "",
+      arguments: [this],
+    };
   }
 }
 
