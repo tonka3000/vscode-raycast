@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.11
+
+- Display `disableByDefault` in tree
+- Ask for `disableByDefault` when creating a new command
+
 ## 0.10
 
 - Display possible migration of the Raycast API in the tree
