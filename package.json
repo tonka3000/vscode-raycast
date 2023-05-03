@@ -2,7 +2,7 @@
   "name": "raycast",
   "displayName": "Raycast",
   "description": "",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "engines": {
     "vscode": "^1.67.0"
   },
@@ -29,6 +29,7 @@
     "onCommand:raycast.goto.preference",
     "onCommand:raycast.goto.command",
     "onCommand:raycast.goto.command.mode",
+    "onCommand:raycast.goto.command.disabledbydefault",
     "onCommand:raycast.goto.command.interval",
     "onCommand:raycast.updateinternalstate",
     "onCommand:raycast.opencommand",
@@ -152,6 +153,12 @@
         "icon": "$(code)"
       },
       {
+        "command": "raycast.goto.command.disabledbydefault",
+        "title": "Go to Command Disabled By Default Manifest Location",
+        "category": "Raycast",
+        "icon": "$(code)"
+      },
+      {
         "command": "raycast.goto.command.interval",
         "title": "Go to Command Interval Manifest Location",
         "category": "Raycast",
@@ -242,6 +249,10 @@
           "when": "raycast.workspaceEnabled"
         },
         {
+          "command": "raycast.goto.command.disabledbydefault",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
           "command": "raycast.goto.command.argument",
           "when": "false"
         },
@@ -291,6 +302,11 @@
         {
           "command": "raycast.goto.command.mode",
           "when": "view == raycast && viewItem == mode",
+          "group": "inline"
+        },
+        {
+          "command": "raycast.goto.command.disabledbydefault",
+          "when": "view == raycast && viewItem == disabledbydefault",
           "group": "inline"
         },
         {
