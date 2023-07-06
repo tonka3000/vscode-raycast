@@ -13,7 +13,7 @@ interface NPMResponse {
 
 export async function fetchVersionFromNPMPackage(
   manager: ExtensionManager,
-  packageName: string
+  packageName: string,
 ): Promise<string | undefined> {
   try {
     manager.logger.debug(`Fetch NPM package information for '${packageName}'`);

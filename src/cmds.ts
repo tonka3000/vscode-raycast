@@ -43,20 +43,20 @@ export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("attachdebugger", async () => attachDebuggerCmd(manager));
   manager.registerCommand("refreshtree", async () => refreshTreeCmd(manager));
   manager.registerCommand("goto.preference", async (...args: any[]) =>
-    gotoPreferenceManifestLocationCmd(manager, args)
+    gotoPreferenceManifestLocationCmd(manager, args),
   );
   manager.registerCommand("goto.command", async (...args: any[]) => gotoCommandManifestLocationCmd(manager, args));
   manager.registerCommand("goto.command.mode", async (...args: any[]) =>
-    gotoCommandModeManifestLocationCmd(manager, args)
+    gotoCommandModeManifestLocationCmd(manager, args),
   );
   manager.registerCommand("goto.command.disabledbydefault", async (...args: any[]) =>
-    gotoCommandDisabledByDefaultManifestLocationCmd(manager, args)
+    gotoCommandDisabledByDefaultManifestLocationCmd(manager, args),
   );
   manager.registerCommand("goto.command.interval", async (...args: any[]) =>
-    gotoCommandIntervalManifestLocationCmd(manager, args)
+    gotoCommandIntervalManifestLocationCmd(manager, args),
   );
   manager.registerCommand("goto.command.argument", async (...args: any[]) =>
-    gotoCommandArgumentManifestLocationCmd(manager, args)
+    gotoCommandArgumentManifestLocationCmd(manager, args),
   );
   manager.registerCommand("command.arguments.add", async (...args: any[]) => addCommandArgumentCmd(manager, args));
 }

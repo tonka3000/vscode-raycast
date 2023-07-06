@@ -8,7 +8,7 @@ import { readManifestAST, readManifestFile } from "../manifest";
 async function getPreferencePositionInFile(
   filename: string,
   prefName: string,
-  cmdName?: string | undefined
+  cmdName?: string | undefined,
 ): Promise<vscode.Position | undefined> {
   try {
     const manifest = await readManifestAST(filename);
