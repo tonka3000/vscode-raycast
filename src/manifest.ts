@@ -158,7 +158,7 @@ function getObject(root: ValueNode, path: string): ValueNode | undefined {
           for (const c of cursor.children) {
             if (c.type === "Object") {
               const result = c.children.find(
-                (e) => e.key.value === key && e.value.type === "Literal" && e.value.value === val
+                (e) => e.key.value === key && e.value.type === "Literal" && e.value.value === val,
               );
               if (result) {
                 cursor = c;

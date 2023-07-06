@@ -7,7 +7,7 @@ export interface CustomQuickPickOptions {
 
 export async function showCustomQuickPick(
   choices: string[],
-  options?: CustomQuickPickOptions | undefined
+  options?: CustomQuickPickOptions | undefined,
 ): Promise<string> {
   return new Promise((resolve) => {
     const quickPick = vscode.window.createQuickPick();

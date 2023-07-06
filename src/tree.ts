@@ -53,15 +53,15 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
         items.push(
           new MigrateTreeItem(
             latestMigration ? toMinorVersion(latestMigration, true) : "?",
-            localVersion ? reduceToVersion(localVersion) : "?"
-          )
+            localVersion ? reduceToVersion(localVersion) : "?",
+          ),
         );
       }
       items.push(
         ...[
           new CommandsTreeItem(vscode.TreeItemCollapsibleState.Expanded),
           new PreferencesTreeItem(vscode.TreeItemCollapsibleState.Collapsed),
-        ]
+        ],
       );
       return Promise.resolve(items);
     } else {
@@ -77,9 +77,9 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
                 this.manifest,
                 (c.preferences && c.preferences.length) || c.mode
                   ? vscode.TreeItemCollapsibleState.Collapsed
-                  : vscode.TreeItemCollapsibleState.None
-              )
-          )
+                  : vscode.TreeItemCollapsibleState.None,
+              ),
+          ),
         );
       } else if (element instanceof PreferencesTreeItem) {
         const cmd = element.cmd;
@@ -89,8 +89,8 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
         }
         return Promise.resolve(
           prefs.map(
-            (p) => new PreferenceTreeItem(p, this.manager, this.manifest, vscode.TreeItemCollapsibleState.None, cmd)
-          )
+            (p) => new PreferenceTreeItem(p, this.manager, this.manifest, vscode.TreeItemCollapsibleState.None, cmd),
+          ),
         );
       } else if (element instanceof CommandTreeItem) {
         const prefs = element.cmd?.preferences || [];
@@ -104,15 +104,15 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
         children.push(
           new PreferencesTreeItem(
             prefs.length > 0 ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.None,
-            element.cmd
-          )
+            element.cmd,
+          ),
         );
         const args = element.cmd?.arguments || [];
         children.push(
           new ArgumentsTreeItem(
             args.length > 0 ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.None,
-            element.cmd
-          )
+            element.cmd,
+          ),
         );
         const disabledByDefault = element.cmd?.disabledByDefault || false;
         if (disabledByDefault) {
@@ -124,8 +124,8 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
         const args = cmd?.arguments || [];
         return Promise.resolve(
           args.map(
-            (a) => new ArgumentTreeItem(a, this.manager, this.manifest, vscode.TreeItemCollapsibleState.None, cmd)
-          )
+            (a) => new ArgumentTreeItem(a, this.manager, this.manifest, vscode.TreeItemCollapsibleState.None, cmd),
+          ),
         );
       }
     }
@@ -134,7 +134,7 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
 
   private isRaycastAPIUpdateAvailable(
     raycastNPMVersion: string | undefined,
-    packageJSONVersion: string | undefined
+    packageJSONVersion: string | undefined,
   ): boolean {
     try {
       if (!raycastNPMVersion || !packageJSONVersion) {
@@ -143,7 +143,7 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
       const minorPackageJSON = toMinorVersion(reduceToVersion(packageJSONVersion));
       const minorNPM = toMinorVersion(raycastNPMVersion);
       this.manager.logger.debug(
-        `raycast npm Version: ${raycastNPMVersion}, package.json version: ${packageJSONVersion}`
+        `raycast npm Version: ${raycastNPMVersion}, package.json version: ${packageJSONVersion}`,
       );
       this.manager.logger.debug(`minor version => npm: ${minorNPM}, package.json: ${minorPackageJSON}`);
       return semver.gt(minorNPM, minorPackageJSON);
@@ -187,7 +187,10 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
 }
 
 export class RaycastTreeItem extends vscode.TreeItem {
-  constructor(public label?: string, public readonly collapsibleState?: vscode.TreeItemCollapsibleState) {
+  constructor(
+    public label?: string,
+    public readonly collapsibleState?: vscode.TreeItemCollapsibleState,
+  ) {
     super(label || "", collapsibleState);
   }
 }
@@ -219,7 +222,7 @@ export class CommandTreeItem extends RaycastTreeItem {
     public readonly cmd: Command,
     public readonly manager: ExtensionManager,
     public readonly manifest: Manifest | undefined,
-    public readonly collapsibleState: vscode.TreeItemCollapsibleState
+    public readonly collapsibleState: vscode.TreeItemCollapsibleState,
   ) {
     super(cmd.title || cmd.name || "?", collapsibleState);
     this.description = cmd.subtitle;
@@ -241,7 +244,10 @@ export class CommandTreeItem extends RaycastTreeItem {
 }
 
 export class PreferencesTreeItem extends RaycastTreeItem {
-  constructor(public readonly collapsibleState: vscode.TreeItemCollapsibleState, public readonly cmd?: Command) {
+  constructor(
+    public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+    public readonly cmd?: Command,
+  ) {
     super("Preferences", collapsibleState);
     this.contextValue = cmd === undefined ? "preferences" : "command-preferences";
     this.iconPath = new vscode.ThemeIcon("gear");
@@ -249,7 +255,10 @@ export class PreferencesTreeItem extends RaycastTreeItem {
 }
 
 export class ArgumentsTreeItem extends RaycastTreeItem {
-  constructor(public readonly collapsibleState: vscode.TreeItemCollapsibleState, public readonly cmd?: Command) {
+  constructor(
+    public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+    public readonly cmd?: Command,
+  ) {
     super("Arguments", collapsibleState);
     this.contextValue = "command-arguments";
     this.iconPath = new vscode.ThemeIcon("symbol-parameter");
@@ -312,7 +321,7 @@ export class PreferenceTreeItem extends RaycastTreeItem {
     public readonly manager: ExtensionManager,
     public readonly manifest: Manifest | undefined,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-    public readonly cmd?: Command
+    public readonly cmd?: Command,
   ) {
     super(preference.title || preference.name || "?", collapsibleState);
     if (preference.type === "checkbox") {
@@ -357,7 +366,7 @@ export class ArgumentTreeItem extends RaycastTreeItem {
     public readonly manager: ExtensionManager,
     public readonly manifest: Manifest | undefined,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-    public readonly cmd?: Command
+    public readonly cmd?: Command,
   ) {
     super(argument.name || "?", collapsibleState);
     this.iconPath = getArgumentThemeIcon(argument.type);

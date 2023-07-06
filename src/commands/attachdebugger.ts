@@ -8,7 +8,7 @@ async function getRaycastNodePid(manager: ExtensionManager): Promise<number | nu
     const { stdout, stderr } = await exec("ps -eo pid,command");
     const splits = stdout.split("\n") as string[];
     for (const s of splits) {
-      if (s.includes("Raycast.app") && s.includes("bin/node")) {
+      if (s.includes("Raycast Helper (Extensions)") || (s.includes("Raycast.app") && s.includes("bin/node"))) {
         manager.logger.debug(`found Raycast node process: ${s}`);
         const st = s.trim();
         const m = st.match(/([0-9]+)/g);
@@ -27,7 +27,7 @@ export async function attachDebuggerCmd(manager: ExtensionManager) {
   const pid = await getRaycastNodePid(manager);
   if (!pid) {
     throw Error(
-      "Could not get Raycast node process. Make sure Raycast is running and an extension was started at least once"
+      "Could not get Raycast node process. Make sure Raycast is running and an extension was started at least once",
     );
   }
   manager.logger.debug(`${pid}`);

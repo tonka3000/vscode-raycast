@@ -28,7 +28,7 @@ export class ExtensionManager implements vscode.Disposable {
       vscode.workspace.onDidChangeConfiguration(async () => {
         this.logger.debug("config changed event");
         await this.updateState();
-      })
+      }),
     );
     this.registerPackageJsonChanges();
     this.registerCompletionProviders();
@@ -51,7 +51,7 @@ export class ExtensionManager implements vscode.Disposable {
     this._context.subscriptions.push(
       vscode.workspace.onDidCreateFiles((e) => {
         triggerUpdateOnChange(e.files.map((f) => f.fsPath));
-      })
+      }),
     );
     this._context.subscriptions.push(
       vscode.workspace.onDidRenameFiles((e) => {
@@ -61,7 +61,7 @@ export class ExtensionManager implements vscode.Disposable {
           files.push(f.oldUri.fsPath);
         });
         triggerUpdateOnChange(files);
-      })
+      }),
     );
     this._context.subscriptions.push(
       vscode.workspace.onDidChangeTextDocument((e) => {
@@ -69,12 +69,12 @@ export class ExtensionManager implements vscode.Disposable {
         if (e.document.fileName === pkgjson) {
           triggerUpdateOnChange([e.document.fileName]);
         }
-      })
+      }),
     );
     this._context.subscriptions.push(
       vscode.workspace.onDidDeleteFiles((e) => {
         triggerUpdateOnChange(e.files.map((f) => f.fsPath));
-      })
+      }),
     );
     this._context.subscriptions.push(
       vscode.workspace.onDidSaveTextDocument((e) => {
@@ -83,7 +83,7 @@ export class ExtensionManager implements vscode.Disposable {
           this.updateState();
           this.refreshTree();
         }
-      })
+      }),
     );
   }
 
@@ -308,7 +308,7 @@ export class ExtensionManager implements vscode.Disposable {
           document: vscode.TextDocument,
           position: vscode.Position,
           token: vscode.CancellationToken,
-          context: vscode.CompletionContext
+          context: vscode.CompletionContext,
         ) {
           const line = document.lineAt(position.line);
           const text = line.text.substring(0, position.character);
@@ -324,7 +324,7 @@ export class ExtensionManager implements vscode.Disposable {
         },
       },
       '"',
-      "'"
+      "'",
     );
     const jsonImageAssetCompletionProvider = vscode.languages.registerCompletionItemProvider(
       "json",
@@ -333,7 +333,7 @@ export class ExtensionManager implements vscode.Disposable {
           document: vscode.TextDocument,
           position: vscode.Position,
           token: vscode.CancellationToken,
-          context: vscode.CompletionContext
+          context: vscode.CompletionContext,
         ) {
           const filename = path.basename(document.fileName);
           if (filename !== "package.json") {
@@ -362,7 +362,7 @@ export class ExtensionManager implements vscode.Disposable {
           return undefined;
         },
       },
-      '"'
+      '"',
     );
     this._context.subscriptions.push(tsImageAssetCompletionProvider, jsonImageAssetCompletionProvider);
   }
