@@ -87,7 +87,7 @@ async function processFileRequest(requestFilename: string, manager: ExtensionMan
     if (filename) {
       await handleWriteCommands(
         vscode.Uri.parse(`vscode://tonka3000.raycast/writecommands?filename=${filename}`),
-        manager
+        manager,
       );
     }
   } else {
