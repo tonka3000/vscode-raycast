@@ -39,6 +39,7 @@ and more
 - ✅ Search in [Documentation](https://developers.raycast.com)
 - ✅ Raycast Tree-view for easy navigation
 - ✅ Auto Completion for script directives
+- ✅ Open the Extension Issues Dashboard
 
 ## Requirements
 
