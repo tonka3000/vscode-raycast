@@ -23,6 +23,7 @@ import { gotoCommandArgumentManifestLocationCmd } from "./commands/goto/argument
 import { addCommandArgumentCmd } from "./commands/addCommandArgument";
 import { updateInternalState } from "./commands/updateInternalState";
 import { gotoCommandDisabledByDefaultManifestLocationCmd } from "./commands/goto/disabledByDefault";
+import { extensionIssuesCmd } from "./commands/extensionIssues";
 
 export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("lint", async () => lintCmd(manager));
@@ -42,6 +43,7 @@ export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("publish", async () => publicCmd(manager));
   manager.registerCommand("attachdebugger", async () => attachDebuggerCmd(manager));
   manager.registerCommand("refreshtree", async () => refreshTreeCmd(manager));
+  manager.registerCommand("extensionissues", async () => extensionIssuesCmd(manager));
   manager.registerCommand("goto.preference", async (...args: any[]) =>
     gotoPreferenceManifestLocationCmd(manager, args),
   );
