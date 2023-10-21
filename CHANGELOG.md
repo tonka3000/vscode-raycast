@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.13
+
+- Add `Open Extension Issues Dashboard`
+
+## 0.12
+
+- Add support for new Raycast node process
+
 ## 0.11
 
 - Display `disableByDefault` in tree

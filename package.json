@@ -2,7 +2,7 @@
   "name": "raycast",
   "displayName": "Raycast",
   "description": "",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "engines": {
     "vscode": "^1.67.0"
   },
@@ -82,6 +82,11 @@
       {
         "command": "raycast.searchdocs",
         "title": "Search Documentation",
+        "category": "Raycast"
+      },
+      {
+        "command": "raycast.extensionissues",
+        "title": "Open Extension Issues Dashboard",
         "category": "Raycast"
       },
       {
@@ -250,6 +255,10 @@
         },
         {
           "command": "raycast.goto.command.disabledbydefault",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.extensionissues",
           "when": "raycast.workspaceEnabled"
         },
         {
