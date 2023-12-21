@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.14
+
+- Add auto completion for `launchCommand` properties `name`, `extensionName` and `ownerOrAuthorName`
+
 ## 0.13
 
 - Add `Open Extension Issues Dashboard`

@@ -53,6 +53,8 @@ export interface Manifest {
   name?: string;
   title?: string;
   icon?: string;
+  author?: string;
+  owner?: string;
   description?: string;
   commands?: Command[];
   preferences?: Preference[];
