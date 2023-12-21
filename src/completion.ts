@@ -106,7 +106,29 @@ async function processLaunchCommand(args: {
 }
 
 export function registerRaycastCompletionProvider(extensionManager: ExtensionManager) {
-  const tsImageAssetCompletionProvider = vscode.languages.registerCompletionItemProvider(
+  const tsCompletionProvider = vscode.languages.registerCompletionItemProvider(
+    "typescript",
+    {
+      async provideCompletionItems(
+        document: vscode.TextDocument,
+        position: vscode.Position,
+        token: vscode.CancellationToken,
+        context: vscode.CompletionContext,
+      ) {
+        if (!extensionManager.isRaycastEnabled) {
+          return;
+        }
+        const line = document.lineAt(position.line);
+        if (line.text.trim().startsWith("launchCommand")) {
+          return await processLaunchCommand({ line, position, document, extensionManager });
+        }
+        return undefined;
+      },
+    },
+    '"',
+    "'",
+  );
+  const tsreactCompletionProvider = vscode.languages.registerCompletionItemProvider(
     "typescriptreact",
     {
       async provideCompletionItems(
@@ -137,7 +159,7 @@ export function registerRaycastCompletionProvider(extensionManager: ExtensionMan
     '"',
     "'",
   );
-  const jsonImageAssetCompletionProvider = vscode.languages.registerCompletionItemProvider(
+  const jsonCompletionProvider = vscode.languages.registerCompletionItemProvider(
     "json",
     {
       async provideCompletionItems(
@@ -178,5 +200,5 @@ export function registerRaycastCompletionProvider(extensionManager: ExtensionMan
     },
     '"',
   );
-  extensionManager.context.subscriptions.push(tsImageAssetCompletionProvider, jsonImageAssetCompletionProvider);
+  extensionManager.context.subscriptions.push(tsCompletionProvider, tsreactCompletionProvider, jsonCompletionProvider);
 }
