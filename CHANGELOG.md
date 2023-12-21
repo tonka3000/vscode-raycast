@@ -3,6 +3,7 @@
 ## 0.14
 
 - Add auto completion for `launchCommand` properties `name`, `extensionName` and `ownerOrAuthorName`
+- Remove explicit return types for command templates
 
 ## 0.13
 

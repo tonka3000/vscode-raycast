@@ -212,7 +212,7 @@ export async function addCommandCmd(manager: ExtensionManager) {
           let lines: string[] = [
             'import { List } from "@raycast/api";',
             "",
-            `export default function ${capitalizeFirstLetter(cmd.name)?.replace("_", "")}Command(): JSX.Element {`,
+            `export default function ${capitalizeFirstLetter(cmd.name)?.replace("_", "")}Command() {`,
             "  return <List />;",
             "}",
             "",
@@ -235,7 +235,7 @@ export async function addCommandCmd(manager: ExtensionManager) {
                 lines = [
                   'import { MenuBarExtra, showHUD } from "@raycast/api";',
                   "",
-                  "export default function MenuCommand(): JSX.Element {",
+                  "export default function MenuCommand() {",
                   "  return (",
                   '    <MenuBarExtra title="My Menu">',
                   '      <MenuBarExtra.Item title="Child" onAction={() => showHUD("Child Menu from Menubar")} />',
