@@ -89,7 +89,6 @@ async function processLaunchCommand(args: {
       return;
     }
     const extensions = manifests?.filter((m) => (m.owner === ownerAuthor || m.author === ownerAuthor) && m.name);
-    console.log(extensions);
     return extensions?.map(
       (o) =>
         new vscode.CompletionItem(
