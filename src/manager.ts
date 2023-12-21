@@ -7,6 +7,7 @@ import { readManifestFile } from "./manifest";
 import { fetchVersionFromNPMPackage } from "./npm";
 import { RaycastTreeDataProvider } from "./tree";
 import { getErrorMessage } from "./utils";
+import { registerRaycastCompletionProvider } from "./completion";
 
 export class ExtensionManager implements vscode.Disposable {
   private _context: vscode.ExtensionContext;
@@ -301,70 +302,7 @@ export class ExtensionManager implements vscode.Disposable {
 
   private registerCompletionProviders() {
     const self = this;
-    const tsImageAssetCompletionProvider = vscode.languages.registerCompletionItemProvider(
-      "typescriptreact",
-      {
-        async provideCompletionItems(
-          document: vscode.TextDocument,
-          position: vscode.Position,
-          token: vscode.CancellationToken,
-          context: vscode.CompletionContext,
-        ) {
-          const line = document.lineAt(position.line);
-          const text = line.text.substring(0, position.character);
-          const sourceIndex = text.lastIndexOf("source:");
-          const iconIndex = text.lastIndexOf("icon=");
-          if ((sourceIndex > 0 && text.length - sourceIndex < 15) || (iconIndex > 0 && text.length - iconIndex < 15)) {
-            const assets = await self.getImageAssets();
-            if (assets && assets.length > 0) {
-              return assets.map((a) => new vscode.CompletionItem(a, vscode.CompletionItemKind.File));
-            }
-          }
-          return undefined;
-        },
-      },
-      '"',
-      "'",
-    );
-    const jsonImageAssetCompletionProvider = vscode.languages.registerCompletionItemProvider(
-      "json",
-      {
-        async provideCompletionItems(
-          document: vscode.TextDocument,
-          position: vscode.Position,
-          token: vscode.CancellationToken,
-          context: vscode.CompletionContext,
-        ) {
-          const filename = path.basename(document.fileName);
-          if (filename !== "package.json") {
-            return undefined;
-          }
-          const line = document.lineAt(position.line);
-          const text = line.text.substring(0, position.character);
-          const lastColon = text.lastIndexOf(":");
-          if (lastColon > 0) {
-            const splits = text.substring(0, lastColon).split(":");
-            if (splits && splits.length > 0) {
-              const last = splits[splits.length - 1];
-              if (last.includes('"icon"')) {
-                const assets = await self.getImageAssets();
-                if (assets && assets.length > 0) {
-                  const comps = assets.map((a) => {
-                    const c = new vscode.CompletionItem(a, vscode.CompletionItemKind.File);
-                    c.range = new vscode.Range(position, position); // required for json files
-                    return c;
-                  });
-                  return comps;
-                }
-              }
-            }
-          }
-          return undefined;
-        },
-      },
-      '"',
-    );
-    this._context.subscriptions.push(tsImageAssetCompletionProvider, jsonImageAssetCompletionProvider);
+    registerRaycastCompletionProvider(self);
   }
 
   public async setLoaded() {

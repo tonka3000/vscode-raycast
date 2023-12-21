@@ -52,3 +52,12 @@ export async function showTextDocumentAtPosition(uri: vscode.Uri, position?: vsc
     await openDoc(uri);
   }
 }
+
+export function deduplicate(arr: string[] | undefined) {
+  if (!arr) {
+    return arr;
+  }
+  return arr.filter(function (elem, index, self) {
+    return index === self.indexOf(elem);
+  });
+}
