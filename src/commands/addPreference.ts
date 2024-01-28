@@ -20,6 +20,10 @@ async function askName(pref: Preference, existingPrefs: string[]): Promise<strin
       if (existingPrefs.includes(text)) {
         return "Preference already exists";
       }
+      const pattern = /^[a-zA-Z0-9-._~]*$/;
+      if (!pattern.test(text)) {
+        return "Only a-z, A-Z, 0-9, -, ., _, ~ are allowed";
+      }
       return null;
     },
   });
