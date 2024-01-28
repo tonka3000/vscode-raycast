@@ -2,7 +2,7 @@
 
 ## 0.15
 
-- `Name` is not check for non allowed characters for Command, Preference and Argument
+- `Name` is now checked for non allowed characters for Command, Preference and Argument
 - The tsx file get opened after creating it via `Add Command`
 
 ## 0.14
