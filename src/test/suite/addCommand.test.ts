@@ -1,25 +1,52 @@
 import * as assert from "assert";
-import { makeCommandFunctionName } from "../../commands/addCommand";
+import { makeCommandFilename, makeCommandFunctionName } from "../../commands/addCommand";
 
 suite("addCommand", () => {
   test("makeCommandFunctionName", () => {
     [
       {
-        in: "test",
+        input: "test",
         should: "Test",
       },
       {
-        in: "Test",
+        input: "Test",
         should: "Test",
       },
       {
-        in: "A Cmd - With Characters",
-        should: "ACmdWithCharacters"
+        input: "A Cmd - With Characters",
+        should: "ACmdWithCharacters",
       },
       {
-        in: "A ~. Cmd",
-        should: "ACmd"
-      }
-    ].forEach((e) => assert.strictEqual(makeCommandFunctionName(e.in), e.should));
+        input: "A ~. Cmd",
+        should: "ACmd",
+      },
+    ].forEach(({ input, should }) => assert.strictEqual(makeCommandFunctionName(input), should));
+
+    [
+      {
+        input: "test",
+        not: "test",
+      },
+    ].forEach(({ input, not }) => assert.notStrictEqual(makeCommandFunctionName(input), not));
+  });
+  test("makeCommandFilename", () => {
+    [
+      {
+        input: "Test A Command",
+        should: "testACommand",
+      },
+      {
+        input: "Test ~ A Command",
+        should: "test~ACommand",
+      },
+      {
+        input: "Test - A - Command",
+        should: "test-A-Command",
+      },
+      {
+        input: "Test . A - Command",
+        should: "test.A-Command",
+      },
+    ].forEach(({ input, should }) => assert.strictEqual(makeCommandFilename(input), should));
   });
 });

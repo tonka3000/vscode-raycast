@@ -172,7 +172,7 @@ async function askDisabledByDefault(cmd: Command): Promise<string | undefined> {
   }
 }
 
-function makeCommandFilename(name: string | undefined) {
+export function makeCommandFilename(name: string | undefined) {
   if (!name) {
     return name;
   }

@@ -10,5 +10,5 @@ module.exports = defineConfig([
       ui: "tdd",
       timeout: 20000,
     },
-  }
+  },
 ]);
