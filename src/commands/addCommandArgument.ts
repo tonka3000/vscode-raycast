@@ -18,6 +18,10 @@ async function askName(arg: Argument, existingArgs: string[]): Promise<string | 
       if (existingArgs.includes(text)) {
         return "Argument already exists";
       }
+      const pattern = /^[a-zA-Z0-9-._~]*$/;
+      if (!pattern.test(text)) {
+        return "Only a-z, A-Z, 0-9, -, ., _, ~ are allowed";
+      }
       return null;
     },
   });

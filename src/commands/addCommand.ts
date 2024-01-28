@@ -1,7 +1,7 @@
 import { ExtensionManager } from "../manager";
 import * as vscode from "vscode";
 import path = require("path");
-import { capitalizeFirstLetter, fileExists } from "../utils";
+import { capitalizeFirstLetter, fileExists, showTextDocumentAtPosition } from "../utils";
 import * as fs from "fs";
 import { Command, Manifest } from "../manifest";
 import editJsonFile = require("edit-json-file");
@@ -21,6 +21,10 @@ async function askName(cmd: Command, existingCmds: string[]): Promise<string | u
       }
       if (existingCmds.includes(text)) {
         return "Command already exists";
+      }
+      const pattern = /^[a-zA-Z0-9-._~]*$/;
+      if (!pattern.test(text)) {
+        return "Only a-z, A-Z, 0-9, -, ., _, ~ are allowed";
       }
       return null;
     },
@@ -168,6 +172,25 @@ async function askDisabledByDefault(cmd: Command): Promise<string | undefined> {
   }
 }
 
+export function makeCommandFilename(name: string | undefined) {
+  if (!name) {
+    return name;
+  }
+  let result = name ?? "";
+  result = result.replaceAll(/[\s]/g, "");
+  result = `${result[0].toLocaleLowerCase()}${result.slice(1)}`;
+  return result;
+}
+
+export function makeCommandFunctionName(name: string | undefined) {
+  if (!name) {
+    return name;
+  }
+  let result = capitalizeFirstLetter(name) ?? "";
+  result = result.replaceAll(/[_\s-\.~]/g, "");
+  return result;
+}
+
 export async function addCommandCmd(manager: ExtensionManager) {
   manager.logger.debug("add command to package.json");
   const ws = manager.getActiveWorkspace();
@@ -203,6 +226,8 @@ export async function addCommandCmd(manager: ExtensionManager) {
           return;
         }
 
+        cmd.name = makeCommandFilename(cmd.name);
+
         const srcFolder = path.join(ws.uri.fsPath, "src");
         if (!(await fileExists(srcFolder))) {
           fs.promises.mkdir(srcFolder, { recursive: true });
@@ -212,7 +237,7 @@ export async function addCommandCmd(manager: ExtensionManager) {
           let lines: string[] = [
             'import { List } from "@raycast/api";',
             "",
-            `export default function ${capitalizeFirstLetter(cmd.name)?.replace("_", "")}Command() {`,
+            `export default function ${makeCommandFunctionName(cmd.name)}Command() {`,
             "  return <List />;",
             "}",
             "",
@@ -248,12 +273,15 @@ export async function addCommandCmd(manager: ExtensionManager) {
               break;
           }
           fs.promises.writeFile(tsxFilename, lines.join("\n"));
+          manager.logger.debug(`Created file ${tsxFilename}`);
         }
         const j = editJsonFile(pkgJSON);
         j.append("commands", cmd);
         j.save();
 
-        vscode.window.showInformationMessage(`Adding command '${commandID}' successful`);
+        showTextDocumentAtPosition(vscode.Uri.file(tsxFilename)).catch(() => {
+          vscode.window.showErrorMessage(`Failed to open file ${tsxFilename}`);
+        });
         await manager.updateState();
       }
     } else {
