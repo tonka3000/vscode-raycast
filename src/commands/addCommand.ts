@@ -278,7 +278,7 @@ export async function addCommandCmd(manager: ExtensionManager) {
         j.append("commands", cmd);
         j.save();
 
-        vscode.window.showInformationMessage(`Adding command '${commandID}' successful`);
+        vscode.window.showInformationMessage(`Adding command '${cmd.name}' successful`);
         await manager.updateState();
       }
     } else {

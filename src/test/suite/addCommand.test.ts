@@ -20,6 +20,10 @@ suite("addCommand", () => {
         input: "A ~. Cmd",
         should: "ACmd",
       },
+      {
+        input: " Test ",
+        should: "Test"
+      }
     ].forEach(({ input, should }) => assert.strictEqual(makeCommandFunctionName(input), should));
 
     [
@@ -47,6 +51,10 @@ suite("addCommand", () => {
         input: "Test . A - Command",
         should: "test.A-Command",
       },
+      {
+        input: " Test ",
+        should: "test"
+      }
     ].forEach(({ input, should }) => assert.strictEqual(makeCommandFilename(input), should));
   });
 });
