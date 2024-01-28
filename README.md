@@ -60,7 +60,7 @@ To run this example from the MacOS terminal you need to enter the following line
 
 `open "vscode://tonka3000.raycast/runcommand?cmd=workbench.action.terminal.new"`
 
-⚠️ Arguments for commands are right now not supported but planned for future releases.
+⚠️ Arguments for commands are right now not supported.
 
 ### Limitations
 
