@@ -53,12 +53,12 @@ You can run a command inside VSCode from outside of VSCode via custom URI handle
 The URI handler can run commands with the following schema `vscode://tonka3000.raycast/runcommand?cmd=<cmdid>`.
 `cmdid` needs to be replaced by the internal command id of the specific VSCode command which you wanna trigger.
 
-E.g. you can run the command `Terminal: Create New Terminal` when you use it's internal ID `openInTerminal`.
-The full command would look like `vscode://tonka3000.raycast/runcommand?cmd=openInTerminal`.
+E.g. you can run the command `Terminal: Create New Terminal` when you use it's internal ID `workbench.action.terminal.new`.
+The full command would look like `vscode://tonka3000.raycast/runcommand?cmd=workbench.action.terminal.new`.
 
 To run this example from the MacOS terminal you need to enter the following line into your terminal
 
-`open "vscode://tonka3000.raycast/runcommand?cmd=openInTerminal"`
+`open "vscode://tonka3000.raycast/runcommand?cmd=workbench.action.terminal.new"`
 
 ⚠️ Arguments for commands are right now not supported but planned for future releases.
 
