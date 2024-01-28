@@ -8,6 +8,7 @@ interface NPMDistTags {
 interface NPMResponse {
   _id: string;
   _rev: string;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   "dist-tags": NPMDistTags;
 }
 

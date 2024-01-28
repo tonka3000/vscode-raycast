@@ -182,7 +182,7 @@ function makeCommandFilename(name: string | undefined) {
   return result;
 }
 
-function makeCommandFunctionName(name: string | undefined) {
+export function makeCommandFunctionName(name: string | undefined) {
   if (!name) {
     return name;
   }

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "ES2021",
-    "lib": ["ES2021"],
+    "lib": ["ES2021", "DOM"], // add DOM to avoid compile errors with node-fetch, see https://github.com/node-fetch/node-fetch/issues/1617#issuecomment-1231516415
     "sourceMap": true,
     "rootDir": "src",
     "strict": true /* enable all strict type-checking options */
