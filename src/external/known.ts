@@ -2,8 +2,18 @@ import { CommandMetadata } from "./commands";
 
 const knownCommandMetas: CommandMetadata[] = [
   {
-    command: "openInTerminal",
+    command: "workbench.action.terminal.new",
     title: "Create New Terminal",
+    category: "Terminal",
+  },
+  {
+    command: "openInTerminal",
+    title: "Open New External Terminal",
+    category: "Terminal",
+  },
+  {
+    command: "workbench.action.terminal.kill",
+    title: "Kill Terminal",
     category: "Terminal",
   },
   {

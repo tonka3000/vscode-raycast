@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.15
+
+- `Name` is now checked for non allowed characters for Command, Preference and Argument
+- The tsx file get opened after creating it via `Add Command`
+
 ## 0.14
 
 - Add auto completion for `launchCommand` properties `name`, `extensionName` and `ownerOrAuthorName`
