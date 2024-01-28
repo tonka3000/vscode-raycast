@@ -1,7 +1,7 @@
 import { ExtensionManager } from "../manager";
 import * as vscode from "vscode";
 import path = require("path");
-import { capitalizeFirstLetter, fileExists } from "../utils";
+import { capitalizeFirstLetter, fileExists, showTextDocumentAtPosition } from "../utils";
 import * as fs from "fs";
 import { Command, Manifest } from "../manifest";
 import editJsonFile = require("edit-json-file");
@@ -273,12 +273,15 @@ export async function addCommandCmd(manager: ExtensionManager) {
               break;
           }
           fs.promises.writeFile(tsxFilename, lines.join("\n"));
+          manager.logger.debug(`Created file ${tsxFilename}`);
         }
         const j = editJsonFile(pkgJSON);
         j.append("commands", cmd);
         j.save();
 
-        vscode.window.showInformationMessage(`Adding command '${cmd.name}' successful`);
+        showTextDocumentAtPosition(vscode.Uri.file(tsxFilename)).catch(() => {
+          vscode.window.showErrorMessage(`Failed to open file ${tsxFilename}`);
+        });
         await manager.updateState();
       }
     } else {
