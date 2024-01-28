@@ -22,6 +22,10 @@ async function askName(cmd: Command, existingCmds: string[]): Promise<string | u
       if (existingCmds.includes(text)) {
         return "Command already exists";
       }
+      const pattern = /^[a-zA-Z0-9-._~]*$/;
+      if (!pattern.test(text)) {
+        return "Only a-z, A-Z, 0-9, -, ., _, ~ are allowed";
+      }
       return null;
     },
   });
@@ -168,6 +172,25 @@ async function askDisabledByDefault(cmd: Command): Promise<string | undefined> {
   }
 }
 
+function makeCommandFilename(name: string | undefined) {
+  if (!name) {
+    return name;
+  }
+  let result = name ?? "";
+  result = result.replaceAll(/[\s]/g, "");
+  result = `${result[0].toLocaleLowerCase()}${result.slice(1)}`;
+  return result;
+}
+
+function makeCommandFunctionName(name: string | undefined) {
+  if (!name) {
+    return name;
+  }
+  let result = capitalizeFirstLetter(name) ?? "";
+  result = result.replaceAll(/[_\s-\.~]/g, "");
+  return result;
+}
+
 export async function addCommandCmd(manager: ExtensionManager) {
   manager.logger.debug("add command to package.json");
   const ws = manager.getActiveWorkspace();
@@ -203,6 +226,8 @@ export async function addCommandCmd(manager: ExtensionManager) {
           return;
         }
 
+        cmd.name = makeCommandFilename(cmd.name);
+
         const srcFolder = path.join(ws.uri.fsPath, "src");
         if (!(await fileExists(srcFolder))) {
           fs.promises.mkdir(srcFolder, { recursive: true });
@@ -212,7 +237,7 @@ export async function addCommandCmd(manager: ExtensionManager) {
           let lines: string[] = [
             'import { List } from "@raycast/api";',
             "",
-            `export default function ${capitalizeFirstLetter(cmd.name)?.replace("_", "")}Command() {`,
+            `export default function ${makeCommandFunctionName(cmd.name)}Command() {`,
             "  return <List />;",
             "}",
             "",
