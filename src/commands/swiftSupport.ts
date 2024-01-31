@@ -1,7 +1,7 @@
 import * as afs from "fs/promises";
 import { ExtensionManager } from "../manager";
 import * as vscode from "vscode";
-import { fileExists } from "../utils";
+import { fileExists, showTextDocumentAtPosition } from "../utils";
 import path = require("path");
 import { readManifestFile } from "../manifest";
 
@@ -47,7 +47,9 @@ import RaycastSwiftMacros
   "Hello from Swift"
 }
 `;
-  await afs.writeFile(path.join(sourcesFolder, `${packageName}.swift`), source);
+  const swiftCodeFilename = path.join(sourcesFolder, `${packageName}.swift`);
+  await afs.writeFile(swiftCodeFilename, source);
+  return swiftCodeFilename;
 }
 
 export async function addSwiftSupportCmd(manager: ExtensionManager) {
@@ -60,6 +62,27 @@ export async function addSwiftSupportCmd(manager: ExtensionManager) {
   if (await fileExists(swiftRootFolder)) {
     throw new Error("Swift folder already exists");
   }
-  await addSwiftSupport(manager, swiftRootFolder);
-  vscode.window.showInformationMessage("Swift Support added successfully");
+  const swiftFilename = await addSwiftSupport(manager, swiftRootFolder);
+  showTextDocumentAtPosition(vscode.Uri.file(swiftFilename));
+  vscode.window
+    .showInformationMessage("Swift Support added successfully", ...["How to Import", "More Info"])
+    .then((selected) => {
+      if (selected === "How to Import") {
+        const lines = [
+          "// How to Import",
+          'import { hello } from "swift:../swift" // relative path to the swift directory from the workspace root',
+          "",
+          "async function exampleFunction() {",
+          "\tconsole.log(await hello());",
+          "}",
+        ];
+        vscode.workspace
+          .openTextDocument({ language: "typescript", content: lines.join("\n").replaceAll("\t", "  ") })
+          .then((doc) => {
+            vscode.window.showTextDocument(doc, 1, false);
+          });
+      } else if (selected === "More Info") {
+        vscode.env.openExternal(vscode.Uri.parse("https://github.com/raycast/extensions-swift-tools"));
+      }
+    });
 }
