@@ -2,7 +2,7 @@
   "name": "raycast",
   "displayName": "Raycast",
   "description": "",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "engines": {
     "vscode": "^1.67.0"
   },
@@ -129,6 +129,11 @@
         "category": "Raycast"
       },
       {
+        "command": "raycast.addswiftsupport",
+        "title": "Add Swift Support",
+        "category": "Raycast"
+      },
+      {
         "command": "raycast.attachdebugger",
         "title": "Attach Debugger",
         "category": "Raycast"
@@ -231,6 +236,10 @@
         },
         {
           "command": "raycast.publish",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.addswiftsupport",
           "when": "raycast.workspaceEnabled"
         },
         {
