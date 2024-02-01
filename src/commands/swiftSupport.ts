@@ -4,8 +4,18 @@ import * as vscode from "vscode";
 import { fileExists, showTextDocumentAtPosition } from "../utils";
 import path = require("path");
 import { readManifestFile } from "../manifest";
+import which = require("which");
 
 const raycastSwiftUrl = "https://github.com/raycast/extensions-swift-tools";
+
+async function isXcodeInstalled() {
+  const resolved = await which("xcode-select", { nothrow: true });
+  return resolved ? true : false;
+}
+
+async function openXcodeInAppStore() {
+  await vscode.env.openExternal(vscode.Uri.parse("https://apps.apple.com/app/xcode/id497799835"));
+}
 
 function commentify(lines: string[]) {
   return lines.map((c) => `//${c.length > 0 ? " " : ""}${c}`).join("\n");
@@ -52,10 +62,11 @@ let package = Package(
     "",
     "Example TypeScript file src/mycommand.tsx :",
     "",
-    'import { hello } from "swift:../swift" // relative path to the swift directory from the workspace root',
+    'import { hello, helloName } from "swift:../swift" // relative path to the swift directory from the workspace root',
     "",
     "async function exampleFunction() {",
     "  await hello();",
+    '  await helloName("Michael");',
     "}",
   ];
 
@@ -90,6 +101,10 @@ import RaycastSwiftMacros
   "Hello from Swift"
 }
 
+@raycast func helloName(name:String) -> String{
+  "Hello \(name)"
+}
+
 ${commentify(example)}
 
 ${commentify(warning)}
@@ -109,8 +124,8 @@ export async function addSwiftSupportCmd(manager: ExtensionManager) {
     throw new Error("No active workspace");
   }
   const swiftRootFolder = path.join(ws.uri.fsPath, "swift");
-  if (await fileExists(swiftRootFolder)) {
-    throw new Error("Swift folder already exists");
+  if (await fileExists(path.join(swiftRootFolder, "Package.swift"))) {
+    throw new Error("Swift Support already exist");
   }
   const swiftFilename = await addSwiftSupport(manager, swiftRootFolder);
   showTextDocumentAtPosition(vscode.Uri.file(swiftFilename));
@@ -119,4 +134,19 @@ export async function addSwiftSupportCmd(manager: ExtensionManager) {
       vscode.env.openExternal(vscode.Uri.parse(raycastSwiftUrl));
     }
   });
+  const xcodeInstalled = await isXcodeInstalled();
+  if (!xcodeInstalled) {
+    vscode.window
+      .showWarningMessage(
+        "You need to install Xcode because it is required for Swift for Raycast",
+        ...["More Info", "AppStore"],
+      )
+      .then((selected) => {
+        if (selected === "More Info") {
+          vscode.env.openExternal(vscode.Uri.parse(raycastSwiftUrl + "#requirements"));
+        } else if (selected === "AppStore") {
+          openXcodeInAppStore();
+        }
+      });
+  }
 }
