@@ -5,6 +5,8 @@ import { fileExists, showTextDocumentAtPosition } from "../utils";
 import path = require("path");
 import { readManifestFile } from "../manifest";
 
+const raycastSwiftUrl = "https://github.com/raycast/extensions-swift-tools";
+
 async function addSwiftSupport(manager: ExtensionManager, rootFolder: string) {
   const manifest = await readManifestFile(manager.getActiveWorkspacePackageFilename());
   const packageName = manifest?.name;
@@ -40,8 +42,26 @@ let package = Package(
 )`;
   await afs.writeFile(swiftPackageFilename, swiftPackage);
 
+  const comments = [
+    "How to Import from TypeScript file",
+    'import { hello } from "swift:../swift" // relative path to the swift directory from the workspace root',
+    "",
+    "async function exampleFunction() {",
+    "  await hello();",
+    "}",
+    "",
+    "Write a global swift function and add @raycast before to make it available in TypeScript",
+    "",
+    "Warning: You shouldn't have a main.swift file in your project nor a structure marked with @main.",
+    "         These are reserved for the Swift-to-TypeScript plugins.",
+    "",
+    `For more details goto the official repository ${raycastSwiftUrl}`,
+  ];
+
   const source = `import Foundation
 import RaycastSwiftMacros
+
+${comments.map((c) => `// ${c}`).join("\n")}
 
 @raycast func hello() -> String {
   "Hello from Swift"
@@ -64,25 +84,9 @@ export async function addSwiftSupportCmd(manager: ExtensionManager) {
   }
   const swiftFilename = await addSwiftSupport(manager, swiftRootFolder);
   showTextDocumentAtPosition(vscode.Uri.file(swiftFilename));
-  vscode.window
-    .showInformationMessage("Swift Support added successfully", ...["How to Import", "More Info"])
-    .then((selected) => {
-      if (selected === "How to Import") {
-        const lines = [
-          "// How to Import",
-          'import { hello } from "swift:../swift" // relative path to the swift directory from the workspace root',
-          "",
-          "async function exampleFunction() {",
-          "\tconsole.log(await hello());",
-          "}",
-        ];
-        vscode.workspace
-          .openTextDocument({ language: "typescript", content: lines.join("\n").replaceAll("\t", "  ") })
-          .then((doc) => {
-            vscode.window.showTextDocument(doc, 1, false);
-          });
-      } else if (selected === "More Info") {
-        vscode.env.openExternal(vscode.Uri.parse("https://github.com/raycast/extensions-swift-tools"));
-      }
-    });
+  vscode.window.showInformationMessage("Swift Support added successfully", ...["More Info"]).then((selected) => {
+    if (selected === "More Info") {
+      vscode.env.openExternal(vscode.Uri.parse(raycastSwiftUrl));
+    }
+  });
 }

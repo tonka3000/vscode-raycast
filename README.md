@@ -40,6 +40,7 @@ and more
 - ✅ Raycast Tree-view for easy navigation
 - ✅ Auto Completion for script directives
 - ✅ Open the Extension Issues Dashboard
+- ✅ Add Swift support with one command
 
 ## Requirements
 

@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.16
+
+- Add `Add Swift Support` command
+
 ## 0.15
 
 - `Name` is now checked for non allowed characters for Command, Preference and Argument
