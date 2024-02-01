@@ -33,6 +33,7 @@
     "onCommand:raycast.goto.command.interval",
     "onCommand:raycast.updateinternalstate",
     "onCommand:raycast.opencommand",
+    "onCommand:raycast.addswiftsupport",
     "onView:raycast",
     "workspaceContains:package.json"
   ],

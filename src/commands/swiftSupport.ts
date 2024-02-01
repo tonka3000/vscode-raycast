@@ -7,6 +7,10 @@ import { readManifestFile } from "../manifest";
 
 const raycastSwiftUrl = "https://github.com/raycast/extensions-swift-tools";
 
+function commentify(lines: string[]) {
+  return lines.map((c) => `//${c.length > 0 ? " " : ""}${c}`).join("\n");
+}
+
 async function addSwiftSupport(manager: ExtensionManager, rootFolder: string) {
   const manifest = await readManifestFile(manager.getActiveWorkspacePackageFilename());
   const packageName = manifest?.name;
@@ -42,30 +46,56 @@ let package = Package(
 )`;
   await afs.writeFile(swiftPackageFilename, swiftPackage);
 
-  const comments = [
-    "How to Import from TypeScript file",
+  const example = [
+    "",
+    "# How to Import from TypeScript file",
+    "",
+    "Example TypeScript file src/mycommand.tsx :",
+    "",
     'import { hello } from "swift:../swift" // relative path to the swift directory from the workspace root',
     "",
     "async function exampleFunction() {",
     "  await hello();",
     "}",
-    "",
-    "Write a global swift function and add @raycast before to make it available in TypeScript",
-    "",
+  ];
+
+  const warning = [
     "Warning: You shouldn't have a main.swift file in your project nor a structure marked with @main.",
     "         These are reserved for the Swift-to-TypeScript plugins.",
+  ];
+
+  const generalInstructions = [
     "",
-    `For more details goto the official repository ${raycastSwiftUrl}`,
+    "# How to make a Swift function available in TypeScript",
+    "",
+    "Write global Swift functions and mark them with the @raycast attribute.",
+    "Global functions marked with @raycast are exported to TypeScript.",
+    "These functions can have any number of parameters, and one or no return type.",
+    "Exported functions can also be asynchronous (async) or throw errors (throws).",
+    "",
+    "The only restrictions are:",
+    "",
+    "- Parameters must conform to Decodable",
+    "- The return type (if any) must conform to Encodable (or be Void or ()).",
+    "- Variadic parameters and parameter packs are not supported.",
+    "- Only global functions will be exported. Methods or functions within structs, classes, or enums won't be exported.",
+    "",
+    `For more details check out the official repository ${raycastSwiftUrl}`,
   ];
 
   const source = `import Foundation
 import RaycastSwiftMacros
 
-${comments.map((c) => `// ${c}`).join("\n")}
-
 @raycast func hello() -> String {
   "Hello from Swift"
 }
+
+${commentify(example)}
+
+${commentify(warning)}
+
+${commentify(generalInstructions)}
+
 `;
   const swiftCodeFilename = path.join(sourcesFolder, `${packageName}.swift`);
   await afs.writeFile(swiftCodeFilename, source);
