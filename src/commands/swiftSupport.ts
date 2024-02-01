@@ -31,6 +31,7 @@ async function addSwiftSupport(manager: ExtensionManager, rootFolder: string) {
   const gitignore = [".DS_Store", ".build/", ".swiftpm/", ".vscode/", "Package.resolved"];
   const sourcesFolder = path.join(rootFolder, "Sources");
   await afs.mkdir(sourcesFolder, { recursive: true });
+  manager.logger.debug(`Write ${gitignoreFilename}`);
   await afs.writeFile(gitignoreFilename, gitignore.join("\n"));
   const swiftPackageFilename = path.join(rootFolder, "Package.swift");
   const swiftPackage = `// swift-tools-version: 5.9
@@ -54,6 +55,7 @@ let package = Package(
       ),
     ]
 )`;
+  manager.logger.debug(`Write ${swiftPackageFilename}`);
   await afs.writeFile(swiftPackageFilename, swiftPackage);
 
   const example = [
@@ -110,9 +112,9 @@ ${commentify(example)}
 ${commentify(warning)}
 
 ${commentify(generalInstructions)}
-
 `;
   const swiftCodeFilename = path.join(sourcesFolder, `${packageName}.swift`);
+  manager.logger.debug(`Write ${swiftCodeFilename}`);
   await afs.writeFile(swiftCodeFilename, source);
   return swiftCodeFilename;
 }
@@ -125,7 +127,7 @@ export async function addSwiftSupportCmd(manager: ExtensionManager) {
   }
   const swiftRootFolder = path.join(ws.uri.fsPath, "swift");
   if (await fileExists(path.join(swiftRootFolder, "Package.swift"))) {
-    throw new Error("Swift Support already exist");
+    throw new Error("Swift Support already exists");
   }
   const swiftFilename = await addSwiftSupport(manager, swiftRootFolder);
   showTextDocumentAtPosition(vscode.Uri.file(swiftFilename));
