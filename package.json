@@ -2,7 +2,7 @@
   "name": "raycast",
   "displayName": "Raycast",
   "description": "",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "engines": {
     "vscode": "^1.67.0"
   },
@@ -33,6 +33,7 @@
     "onCommand:raycast.goto.command.interval",
     "onCommand:raycast.updateinternalstate",
     "onCommand:raycast.opencommand",
+    "onCommand:raycast.addswiftsupport",
     "onView:raycast",
     "workspaceContains:package.json"
   ],
@@ -126,6 +127,11 @@
       {
         "command": "raycast.publish",
         "title": "Publish",
+        "category": "Raycast"
+      },
+      {
+        "command": "raycast.addswiftsupport",
+        "title": "Add Swift Support",
         "category": "Raycast"
       },
       {
@@ -231,6 +237,10 @@
         },
         {
           "command": "raycast.publish",
+          "when": "raycast.workspaceEnabled"
+        },
+        {
+          "command": "raycast.addswiftsupport",
           "when": "raycast.workspaceEnabled"
         },
         {
@@ -406,6 +416,7 @@
     "@typescript-eslint/parser": "^5.21.0",
     "@vscode/test-cli": "^0.0.4",
     "@vscode/test-electron": "^2.3.9",
+    "@types/which": "^3.0.3",
     "eslint": "^8.14.0",
     "glob": "^8.0.1",
     "mocha": "^9.2.2",
@@ -428,6 +439,7 @@
   "dependencies": {
     "edit-json-file": "^1.7.0",
     "json-to-ast": "^2.1.0",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "which": "^4.0.0"
   }
 }

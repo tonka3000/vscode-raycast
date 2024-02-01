@@ -24,6 +24,7 @@ import { addCommandArgumentCmd } from "./commands/addCommandArgument";
 import { updateInternalState } from "./commands/updateInternalState";
 import { gotoCommandDisabledByDefaultManifestLocationCmd } from "./commands/goto/disabledByDefault";
 import { extensionIssuesCmd } from "./commands/extensionIssues";
+import { addSwiftSupportCmd } from "./commands/swiftSupport";
 
 export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("lint", async () => lintCmd(manager));
@@ -61,4 +62,5 @@ export function registerAllCommands(manager: ExtensionManager) {
     gotoCommandArgumentManifestLocationCmd(manager, args),
   );
   manager.registerCommand("command.arguments.add", async (...args: any[]) => addCommandArgumentCmd(manager, args));
+  manager.registerCommand("addswiftsupport", async () => addSwiftSupportCmd(manager));
 }
