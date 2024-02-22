@@ -33,7 +33,7 @@ async function askName(arg: Argument, existingArgs: string[]): Promise<string | 
 }
 
 async function askType(arg: Argument): Promise<string | undefined> {
-  const result = await vscode.window.showQuickPick(["text", "password"], {
+  const result = await vscode.window.showQuickPick(["text", "password", "dropdown"], {
     placeHolder: "Choose Type",
     title: "Type",
   });
