@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.17
+
+- Add dropdown type for arguments
+
 ## 0.16
 
 - Add `Add Swift Support` command

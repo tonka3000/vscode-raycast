@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { ExtensionManager } from "../manager";
-import { Argument, readManifestFile } from "../manifest";
+import { Argument, ArgumentType, readManifestFile } from "../manifest";
 import { ArgumentsTreeItem, PreferencesTreeItem } from "../tree";
 import editJsonFile = require("edit-json-file");
 
@@ -147,6 +147,12 @@ export async function addCommandArgumentCmd(manager: ExtensionManager, args: any
     }
     if ((await askRequired(argument)) === undefined) {
       return;
+    }
+    if (argument.type === ArgumentType.dropdown) {
+      argument.data = [
+        { title: "Title 1", value: "Value 1" },
+        { title: "Title 2", value: "Value 2" },
+      ];
     }
     const j = editJsonFile(pkgJSON);
     j.append(`commands.${index}.arguments`, argument);
