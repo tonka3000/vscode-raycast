@@ -47,6 +47,13 @@ export interface Argument {
   type?: string;
   placeholder?: string;
   required?: boolean;
+  data?: PreferenceData[];
+}
+
+export enum ArgumentType {
+  textfield = "textfield",
+  password = "password",
+  dropdown = "dropdown",
 }
 
 export interface Manifest {
