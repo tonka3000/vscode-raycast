@@ -86,7 +86,9 @@ async function processFileRequest(requestFilename: string, manager: ExtensionMan
     const filename = request?.args?.filename as string | undefined;
     if (filename) {
       await handleWriteCommands(
-        vscode.Uri.parse(`vscode://tonka3000.raycast/writecommands?filename=${filename}`),
+        vscode.Uri.parse(
+          `vscode://tonka3000.raycast/writecommands?filename=${encodeURIComponent(filename)}`,
+        ),
         manager,
       );
     }
@@ -123,11 +125,7 @@ export function registerExternalHandlers(manager: ExtensionManager) {
     try {
       manager.logger.debug(`${filename} changed`);
       if (filename === "request.json") {
-        if (vscode.window.state.focused) {
-          await processFileRequest(path.join(tsFolder, filename), manager);
-        } else {
-          manager.logger.debug("Ignore changed file because window is not focused");
-        }
+        await processFileRequest(path.join(tsFolder, filename), manager);
       }
     } catch (error) {
       const msg = getErrorMessage(error);

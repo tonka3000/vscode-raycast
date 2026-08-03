@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.18
+
+- Fix `Commands` command to work while the VS Code window is not focused
+
 ## 0.17
 
 - Add dropdown type for arguments
