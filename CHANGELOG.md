@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.18
+
+- Add Update API command
+
 ## 0.17
 
 - Add dropdown type for arguments
