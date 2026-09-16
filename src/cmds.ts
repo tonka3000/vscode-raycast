@@ -31,6 +31,11 @@ export function registerAllCommands(manager: ExtensionManager) {
   manager.registerCommand("lintfix", async () => lintFixCmd(manager));
   manager.registerCommand("build", async () => buildCmd(manager));
   manager.registerCommand("rundev", async () => runDevCmd(manager));
+  manager.registerCommand("updateapi", async () => {
+    if (manager.isRaycastEnabled && manager.getActiveWorkspace()) {
+      manager.runNpm(["install", "@raycast/api@latest"]);
+    }
+  });
   manager.registerCommand("migration", async () => runMigrationCmd(manager));
   manager.registerCommand("updateinternalstate", async () => updateInternalState(manager));
   manager.registerCommand("opendocs", async () => openDocsCmd(manager));

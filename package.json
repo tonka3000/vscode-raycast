@@ -19,6 +19,7 @@
     "onCommand:raycast.lintfix",
     "onCommand:raycast.build",
     "onCommand:raycast.migration",
+    "onCommand:raycast.updateapi",
     "onCommand:raycast.opendocs",
     "onCommand:raycast.searchdocs",
     "onCommand:raycast.addcommand",
@@ -43,6 +44,11 @@
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
+      {
+        "command": "raycast.updateapi",
+        "title": "Update API",
+        "category": "Raycast"
+      },
       {
         "command": "raycast.build",
         "title": "Build",
@@ -187,6 +193,10 @@
     ],
     "menus": {
       "commandPalette": [
+        {
+          "command": "raycast.updateapi",
+          "when": "raycast.workspaceEnabled"
+        },
         {
           "command": "raycast.build",
           "when": "raycast.workspaceEnabled"
