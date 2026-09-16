@@ -37,6 +37,8 @@
     "onCommand:raycast.goto.command.interval",
     "onCommand:raycast.updateinternalstate",
     "onCommand:raycast.opencommand",
+    "onCommand:raycast.opentool",
+    "onCommand:raycast.goto.tool",
     "onCommand:raycast.addswiftsupport",
     "onView:raycast",
     "workspaceContains:package.json"
@@ -189,6 +191,17 @@
         "title": "Go to Command Argument Manifest Location",
         "category": "Raycast",
         "icon": "$(code)"
+      },
+      {
+        "command": "raycast.opentool",
+        "title": "Open Tool File",
+        "category": "Raycast"
+      },
+      {
+        "command": "raycast.goto.tool",
+        "title": "Go to Tool Manifest Location",
+        "category": "Raycast",
+        "icon": "$(code)"
       }
     ],
     "menus": {
@@ -291,6 +304,14 @@
         {
           "command": "raycast.refreshtree",
           "when": "false"
+        },
+        {
+          "command": "raycast.opentool",
+          "when": "false"
+        },
+        {
+          "command": "raycast.goto.tool",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -349,6 +370,11 @@
         {
           "command": "raycast.goto.command.argument",
           "when": "view == raycast && viewItem == argument",
+          "group": "inline"
+        },
+        {
+          "command": "raycast.goto.tool",
+          "when": "view == raycast && viewItem == tool",
           "group": "inline"
         }
       ]

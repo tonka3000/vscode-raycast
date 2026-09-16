@@ -25,6 +25,13 @@ export interface Command {
   disabledByDefault?: boolean;
 }
 
+export interface Tool {
+  name?: string;
+  title?: string;
+  description?: string;
+  icon?: string;
+}
+
 export interface PreferenceData {
   title?: string;
   value?: string;
@@ -64,6 +71,7 @@ export interface Manifest {
   owner?: string;
   description?: string;
   commands?: Command[];
+  tools?: Tool[];
   preferences?: Preference[];
   dependencies?: Record<string, string>;
 }
