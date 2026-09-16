@@ -4,6 +4,7 @@ import { ExtensionManager } from "./manager";
 import { Argument, Command, Manifest, Preference, readManifestFileSync } from "./manifest";
 import { fileExistsSync, getModTimeSync } from "./utils";
 import * as semver from "semver";
+import { isAPIUpdateAvailable } from "./versions";
 
 function reduceToVersion(sem: string): string {
   let result = "";
@@ -56,6 +57,10 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
             localVersion ? reduceToVersion(localVersion) : "?",
           ),
         );
+      }
+      const latestAPI = this.manager.raycastAPINPMVersion;
+      if (!migrateAvailable && isAPIUpdateAvailable(latestAPI, localVersion)) {
+        items.push(new UpdateTreeItem(latestAPI!));
       }
       items.push(
         ...[
@@ -192,6 +197,16 @@ export class RaycastTreeItem extends vscode.TreeItem {
     public readonly collapsibleState?: vscode.TreeItemCollapsibleState,
   ) {
     super(label || "", collapsibleState);
+  }
+}
+
+class UpdateTreeItem extends RaycastTreeItem {
+  constructor(version: string) {
+    super(`Update API to ${version}`);
+    this.contextValue = "update";
+    this.tooltip = `Update @raycast/api to ${version}`;
+    this.iconPath = new vscode.ThemeIcon("broadcast");
+    this.command = { command: "raycast.updateapi", title: "Update Raycast API" };
   }
 }
 

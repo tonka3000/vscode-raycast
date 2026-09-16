@@ -2,7 +2,7 @@
   "name": "raycast",
   "displayName": "Raycast",
   "description": "",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "engines": {
     "vscode": "^1.67.0"
   },
@@ -19,6 +19,7 @@
     "onCommand:raycast.lintfix",
     "onCommand:raycast.build",
     "onCommand:raycast.migration",
+    "onCommand:raycast.updateapi",
     "onCommand:raycast.opendocs",
     "onCommand:raycast.searchdocs",
     "onCommand:raycast.addcommand",
@@ -43,6 +44,11 @@
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
+      {
+        "command": "raycast.updateapi",
+        "title": "Update API",
+        "category": "Raycast"
+      },
       {
         "command": "raycast.build",
         "title": "Build",
@@ -187,6 +193,10 @@
     ],
     "menus": {
       "commandPalette": [
+        {
+          "command": "raycast.updateapi",
+          "when": "raycast.workspaceEnabled"
+        },
         {
           "command": "raycast.build",
           "when": "raycast.workspaceEnabled"
