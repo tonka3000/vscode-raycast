@@ -2,10 +2,10 @@ import path = require("path");
 import * as vscode from "vscode";
 import { ExtensionManager } from "../manager";
 import { readManifestFile } from "../manifest";
-import { CommandTreeItem } from "../tree";
+import { CommandTreeItem, ToolTreeItem } from "../tree";
 import { fileExists } from "../utils";
 
-async function findCommandFileInFolder(commandName: string, folder: string): Promise<string> {
+export async function findCommandFileInFolder(commandName: string, folder: string): Promise<string> {
   const exts = ["tsx", "ts", "jsx", "js"];
   for (const e of exts) {
     const fn = path.join(folder, `${commandName}.${e}`);
@@ -61,4 +61,22 @@ export async function openCommandCmd(manager: ExtensionManager, args: any[] | un
       await vscode.commands.executeCommand("vscode.open", vscode.Uri.file(fn));
     }
   }
+}
+
+export function getToolName(args: any[] | undefined): string {
+  const item = args?.[0];
+  if (!(item instanceof ToolTreeItem) || !item.tool.name) {
+    throw Error("No tool name defined");
+  }
+  return item.tool.name;
+}
+
+export async function openToolCmd(manager: ExtensionManager, args: any[] | undefined) {
+  const name = getToolName(args);
+  const ws = manager.getActiveWorkspace();
+  if (!ws) {
+    throw Error("No active workspace");
+  }
+  const filename = await findCommandFileInFolder(name, path.join(ws.uri.fsPath, "src", "tools"));
+  await vscode.commands.executeCommand("vscode.open", vscode.Uri.file(filename));
 }
