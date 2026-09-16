@@ -2,9 +2,9 @@
   "name": "raycast",
   "displayName": "Raycast",
   "description": "",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "engines": {
-    "vscode": "^1.67.0"
+    "vscode": "^1.101.0"
   },
   "publisher": "tonka3000",
   "contributors": [
@@ -19,6 +19,7 @@
     "onCommand:raycast.lintfix",
     "onCommand:raycast.build",
     "onCommand:raycast.migration",
+    "onCommand:raycast.updateapi",
     "onCommand:raycast.opendocs",
     "onCommand:raycast.searchdocs",
     "onCommand:raycast.addcommand",
@@ -36,6 +37,8 @@
     "onCommand:raycast.goto.command.interval",
     "onCommand:raycast.updateinternalstate",
     "onCommand:raycast.opencommand",
+    "onCommand:raycast.opentool",
+    "onCommand:raycast.goto.tool",
     "onCommand:raycast.addswiftsupport",
     "onView:raycast",
     "workspaceContains:package.json"
@@ -43,6 +46,11 @@
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
+      {
+        "command": "raycast.updateapi",
+        "title": "Update API",
+        "category": "Raycast"
+      },
       {
         "command": "raycast.build",
         "title": "Build",
@@ -183,10 +191,25 @@
         "title": "Go to Command Argument Manifest Location",
         "category": "Raycast",
         "icon": "$(code)"
+      },
+      {
+        "command": "raycast.opentool",
+        "title": "Open Tool File",
+        "category": "Raycast"
+      },
+      {
+        "command": "raycast.goto.tool",
+        "title": "Go to Tool Manifest Location",
+        "category": "Raycast",
+        "icon": "$(code)"
       }
     ],
     "menus": {
       "commandPalette": [
+        {
+          "command": "raycast.updateapi",
+          "when": "raycast.workspaceEnabled"
+        },
         {
           "command": "raycast.build",
           "when": "raycast.workspaceEnabled"
@@ -281,6 +304,14 @@
         {
           "command": "raycast.refreshtree",
           "when": "false"
+        },
+        {
+          "command": "raycast.opentool",
+          "when": "false"
+        },
+        {
+          "command": "raycast.goto.tool",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -339,6 +370,11 @@
         {
           "command": "raycast.goto.command.argument",
           "when": "view == raycast && viewItem == argument",
+          "group": "inline"
+        },
+        {
+          "command": "raycast.goto.tool",
+          "when": "view == raycast && viewItem == tool",
           "group": "inline"
         }
       ]
@@ -414,7 +450,7 @@
     "@types/mocha": "^9.1.1",
     "@types/node": "14.x",
     "@types/semver": "^7.3.13",
-    "@types/vscode": "^1.67.0",
+    "@types/vscode": "1.101.0",
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.21.0",
     "@vscode/test-cli": "^0.0.4",

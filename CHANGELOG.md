@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.18
+
+- Add Update API command
+- Add support for Tools navigation
+
 ## 0.17
 
 - Add dropdown type for arguments

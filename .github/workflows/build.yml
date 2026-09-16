@@ -16,16 +16,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 20.x
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: npm install, build, and test
         run: |
           node --version
           npm ci
           npm run prettier
           npm run lint
+          xvfb-run -a npm test
           npm run package-publish
         env:
           CI: true

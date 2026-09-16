@@ -1,9 +1,10 @@
 import path = require("path");
 import * as vscode from "vscode";
 import { ExtensionManager } from "./manager";
-import { Argument, Command, Manifest, Preference, readManifestFileSync } from "./manifest";
+import { Argument, Command, Manifest, Preference, Tool, readManifestFileSync } from "./manifest";
 import { fileExistsSync, getModTimeSync } from "./utils";
 import * as semver from "semver";
+import { isAPIUpdateAvailable } from "./versions";
 
 function reduceToVersion(sem: string): string {
   let result = "";
@@ -57,9 +58,14 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
           ),
         );
       }
+      const latestAPI = this.manager.raycastAPINPMVersion;
+      if (!migrateAvailable && isAPIUpdateAvailable(latestAPI, localVersion)) {
+        items.push(new UpdateTreeItem(latestAPI!));
+      }
       items.push(
         ...[
           new CommandsTreeItem(vscode.TreeItemCollapsibleState.Expanded),
+          new ToolsTreeItem(vscode.TreeItemCollapsibleState.Expanded),
           new PreferencesTreeItem(vscode.TreeItemCollapsibleState.Collapsed),
         ],
       );
@@ -81,6 +87,8 @@ export class RaycastTreeDataProvider implements vscode.TreeDataProvider<RaycastT
               ),
           ),
         );
+      } else if (element instanceof ToolsTreeItem) {
+        return Promise.resolve((mani?.tools || []).map((tool) => new ToolTreeItem(tool, this.manager)));
       } else if (element instanceof PreferencesTreeItem) {
         const cmd = element.cmd;
         let prefs = mani?.preferences || [];
@@ -195,6 +203,16 @@ export class RaycastTreeItem extends vscode.TreeItem {
   }
 }
 
+class UpdateTreeItem extends RaycastTreeItem {
+  constructor(version: string) {
+    super(`Update API to ${version}`);
+    this.contextValue = "update";
+    this.tooltip = `Update @raycast/api to ${version}`;
+    this.iconPath = new vscode.ThemeIcon("broadcast");
+    this.command = { command: "raycast.updateapi", title: "Update Raycast API" };
+  }
+}
+
 class MigrateTreeItem extends RaycastTreeItem {
   constructor(npmVersion: string, localVersion: string) {
     super(`Migrate to ${npmVersion}`);
@@ -214,6 +232,35 @@ class CommandsTreeItem extends RaycastTreeItem {
     super("Commands", collapsibleState);
     this.contextValue = "commands";
     this.iconPath = new vscode.ThemeIcon("terminal");
+  }
+}
+
+export class ToolsTreeItem extends RaycastTreeItem {
+  constructor(public readonly collapsibleState: vscode.TreeItemCollapsibleState) {
+    super("Tools", collapsibleState);
+    this.contextValue = "tools";
+    this.iconPath = new vscode.ThemeIcon("tools");
+  }
+}
+
+export class ToolTreeItem extends RaycastTreeItem {
+  constructor(
+    public readonly tool: Tool,
+    manager: ExtensionManager,
+  ) {
+    super(tool.title || tool.name || "?", vscode.TreeItemCollapsibleState.None);
+    this.tooltip = tool.description;
+    this.contextValue = "tool";
+    this.iconPath = new vscode.ThemeIcon("notebook-render-output");
+    const ws = manager.getActiveWorkspace();
+    if (ws && tool.icon) {
+      this.iconPath = path.join(ws.uri.fsPath, "assets", tool.icon);
+    }
+    this.command = {
+      command: "raycast.opentool",
+      title: "Open Tool File",
+      arguments: [this],
+    };
   }
 }
 

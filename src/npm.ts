@@ -19,12 +19,15 @@ export async function fetchVersionFromNPMPackage(
   try {
     manager.logger.debug(`Fetch NPM package information for '${packageName}'`);
     const res = await fetch(`https://registry.npmjs.org/${packageName}`);
+    if (!res.ok) {
+      throw new Error(`NPM registry returned HTTP ${res.status}`);
+    }
     const j = (await res.json()) as NPMResponse;
     const version = j["dist-tags"]?.latest;
     if (version && version.length > 0) {
       return version;
     }
   } catch (error) {
-    // ignore
+    manager.logger.warning(`Could not fetch ${packageName} from npm: ${String(error)}`);
   }
 }

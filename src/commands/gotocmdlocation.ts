@@ -4,6 +4,7 @@ import * as vscode from "vscode";
 import { showTextDocumentAtPosition } from "../utils";
 import path = require("path");
 import { readManifestAST, readManifestFile } from "../manifest";
+import { getToolName } from "./opencommand";
 
 async function getCommandPositionInFile(filename: string, cmdName: string): Promise<vscode.Position | undefined> {
   try {
@@ -55,4 +56,19 @@ export async function gotoCommandManifestLocationCmd(manager: ExtensionManager, 
     const uri = vscode.Uri.file(filename);
     await showTextDocumentAtPosition(uri, pos);
   }
+}
+
+export async function gotoToolManifestLocationCmd(manager: ExtensionManager, args: any[] | undefined) {
+  const name = getToolName(args);
+  const filename = manager.getActiveWorkspacePackageFilename();
+  if (!filename) {
+    throw Error("No active workspace");
+  }
+  const manifest = await readManifestFile(filename);
+  const index = manifest?.tools?.findIndex((tool) => tool.name === name);
+  if (index === undefined || index < 0) {
+    throw Error("Tool not found in manifest");
+  }
+  const ast = await readManifestAST(filename);
+  await showTextDocumentAtPosition(vscode.Uri.file(filename), ast.getPosition(`tools.${index}`));
 }

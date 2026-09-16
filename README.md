@@ -74,7 +74,7 @@ If you have problems with the extension just file a issue on [GitHub](https://gi
 
 ## Contributions
 
-Pull Requests are welcome :-D
+Pull Requests are welcome 😁
 
 ## License
 

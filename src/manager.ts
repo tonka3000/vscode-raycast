@@ -112,24 +112,22 @@ export class ExtensionManager implements vscode.Disposable {
     }
   }
 
-  private async fetchRaycastVersionFromNPM(): Promise<void> {
-    try {
-      this.logger.debug("Fetch latest raycast migration version from npm");
-      const migrationPackageName = "@raycast/migration";
-      const version = await fetchVersionFromNPMPackage(this, migrationPackageName);
-      if (!version) {
-        this.logger.warning(`Got no version information about ${migrationPackageName} from npm`);
-        return;
-      }
-      this.logger.debug(`Got version ${version} from npm for ${migrationPackageName}`);
-      const versionChanged = version !== this.raycastLatestMigrationVersionFromNPM;
-      this.raycastLatestMigrationVersionFromNPM = version;
-      if (versionChanged) {
-        this.refreshTree();
-      }
-    } catch (error) {
-      // ignore error
-    }
+  public async fetchRaycastVersionFromNPM(): Promise<void> {
+    await Promise.all(
+      ["@raycast/api", "@raycast/migration"].map(async (packageName) => {
+        const version = await fetchVersionFromNPMPackage(this, packageName);
+        if (!version) {
+          this.logger.warning(`Got no version information about ${packageName} from npm`);
+          return;
+        }
+        if (packageName === "@raycast/api") {
+          this.raycastAPINPMVersion = version;
+        } else {
+          this.raycastLatestMigrationVersionFromNPM = version;
+        }
+      }),
+    );
+    this.refreshTree();
   }
 
   public async updateState(): Promise<void> {
